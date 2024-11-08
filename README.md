@@ -1,5 +1,5 @@
 # pyFitOut
-[![GitHub license](https://img.shields.io/github/license/kev-m/pyFitOut)](https://github.com/kev-m/pyFitOut/blob/main/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/kev-m/pyFitOut)](https://github.com/kev-m/pyFitOut/blob/main/LICENSE.txt)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pyFitOut?logo=pypi)](https://pypi.org/project/pyFitOut/)
 [![semver](https://img.shields.io/badge/semver-2.0.0-blue)](https://semver.org/)
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/kev-m/pyFitOut?sort=semver)](https://github.com/kev-m/pyFitOut/releases)
