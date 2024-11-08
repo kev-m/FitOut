@@ -1,13 +1,13 @@
 # pyFitOut
 [![GitHub license](https://img.shields.io/github/license/kev-m/pyFitOut)](https://github.com/kev-m/pyFitOut/blob/main/LICENSE.txt)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pyFitOut?logo=pypi)](https://pypi.org/project/pyFitOut/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/fitout?logo=pypi)](https://pypi.org/project/fitout/)
 [![semver](https://img.shields.io/badge/semver-2.0.0-blue)](https://semver.org/)
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/kev-m/pyFitOut?sort=semver)](https://github.com/kev-m/pyFitOut/releases)
 [![Code style: autopep8](https://img.shields.io/badge/code%20style-autopep8-000000.svg)](https://pypi.org/project/autopep8/)
 
 <!-- ![pyFitOut logo](https://github.com/kev-m/pyFitOut/blob/master/docs/source/figures/Logo_small.png) -->
 
-The **pyFitOut** project is an open source library for extracting FitBit health data from Google Takout.
+The **pyFitOut** project is an open source Python library for extracting FitBit health data from Google Takout.
 
 <!-- For detailed documentation, refer to the [pyFitOut Documentation](https://pyFitOut.readthedocs.io/). -->
 
