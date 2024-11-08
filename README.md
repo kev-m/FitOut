@@ -1,11 +1,11 @@
 # pyFitOut
-[![GitHub license](https://img.shields.io/github/license/kev-m/pyFitOut)](https://github.com/kev-m/pyFitOut/blob/main/LICENSE.txt)
+[![GitHub license](https://img.shields.io/github/license/kev-m/pyFitOut)](https://github.com/kev-m/pyFitOut/blob/development/LICENSE.txt)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/fitout?logo=pypi)](https://pypi.org/project/fitout/)
 [![semver](https://img.shields.io/badge/semver-2.0.0-blue)](https://semver.org/)
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/kev-m/pyFitOut?sort=semver)](https://github.com/kev-m/pyFitOut/releases)
 [![Code style: autopep8](https://img.shields.io/badge/code%20style-autopep8-000000.svg)](https://pypi.org/project/autopep8/)
 
-<!-- ![pyFitOut logo](https://github.com/kev-m/pyFitOut/blob/master/docs/source/figures/Logo_small.png) -->
+<!-- ![pyFitOut logo](https://github.com/kev-m/pyFitOut/blob/development/docs/source/figures/Logo_small.png) -->
 
 The **pyFitOut** project is an open source Python library for extracting FitBit health data from Google Takout.
 
@@ -52,11 +52,11 @@ if __name__ == "__main__":
 
 ## Contributing
 
-If you'd like to contribute to **pyFitOut**, follow the guidelines outlined in the [Contributing Guide](https://github.com/kev-m/pyFitOut/blob/master/CONTRIBUTING.md).
+If you'd like to contribute to **pyFitOut**, follow the guidelines outlined in the [Contributing Guide](https://github.com/kev-m/pyFitOut/blob/development/CONTRIBUTING.md).
 
 ## License
 
-See [`LICENSE.txt`](https://github.com/kev-m/pyFitOut/blob/master/LICENSE.txt) for more information.
+See [`LICENSE.txt`](https://github.com/kev-m/pyFitOut/blob/development/LICENSE.txt) for more information.
 
 ## Contact
 
