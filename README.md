@@ -7,7 +7,7 @@
 
 <!-- ![pyFitOut logo](https://github.com/kev-m/pyFitOut/blob/development/docs/source/figures/Logo_small.png) -->
 
-The **pyFitOut** project is an open source Python library for extracting FitBit health data from Google Takout.
+The **pyFitOut** project is an open source Python library for extracting FitBit health data from Google Takeout.
 
 <!-- For detailed documentation, refer to the [pyFitOut Documentation](https://pyFitOut.readthedocs.io/). -->
 
