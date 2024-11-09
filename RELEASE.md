@@ -69,4 +69,5 @@ Update the `release` branch:
 git checkout release
 git rebase development
 git push
+git checkout development
 ```
