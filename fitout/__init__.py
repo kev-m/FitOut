@@ -1,6 +1,6 @@
-"""A Python library to process FitBit Google Takeout data."""
+"""A Python library to extract FitBit Google Takeout data."""
 # Semantic Versioning according to https://semver.org/spec/v2.0.0.html
-__version__ = "v0.0.2"  # Updating instructions.
+__version__ = "v0.0.3"  # Updating instructions with examples using Numpy.
 
 import csv
 from datetime import date, timedelta
@@ -58,9 +58,10 @@ def number_precision(value, precision):
         float: The rounded number if precision is greater than 0.
         int: The integer value if precision is 0.
     """
+    value = round(value, precision)
     if precision == 0:
         return int(value)
-    return round(value, precision)
+    return value
 
 
 # Data loading classes
@@ -244,7 +245,7 @@ class BreathingRate(TwoLineCSVImporter):
         Constructs the nightly Breathing Rate class instance.
 
         Args:
-            takeout_path (str): The path to the directory containing the Fitbit data.
+            data_source (BaseFileLoader): The data source used to load data.
             precision (int): The precision for numerical data (default is 0).
         """
         # C:\Dev\Fitbit\Google\Takeout\Fitbit\Heart Rate Variability\Daily Respiratory Rate Summary - 2024-07-22.csv
@@ -284,7 +285,7 @@ class HeartRateVariability(TwoLineCSVImporter):
         Constructs the nightly Heart Rate Variability class instance.
 
         Args:
-            takeout_path (str): The path to the directory containing the Fitbit data.
+            data_source (BaseFileLoader): The data source used to load data.
             precision (int): The precision for numerical data (default is 0).
         """
         # C:\Dev\Fitbit\Google\Takeout\Fitbit\Heart Rate Variability\Daily Heart Rate Variability Summary - 2024-07-(21).csv
@@ -318,13 +319,14 @@ class RestingHeartRate():
     Importer for daily resting heart rate data.
     """
 
-    def __init__(self, data_source, precision=0):
+    def __init__(self, data_source, precision=0, hint='%Y-03-01'):
         """
         Constructs the nightly Resting Heart Rate class instance.
 
         Args:
             data_source (BaseFileLoader): The data source used to load data.
             precision (int): The precision for numerical data (default is 0).
+            hint (str): The hint for the date format in the file name (default is '%Y-03-01').
         """
         # C:\Dev\Fitbit\Google\Takeout\Fitbit\Global Export Data\resting_heart_rate-2024-03-01.json
         # [{
@@ -340,6 +342,7 @@ class RestingHeartRate():
         self.precision = precision
         self.data_source = data_source
         self.data_path = '/Fitbit/Global Export Data/resting_heart_rate-'
+        self.hint = hint
 
     def get_data(self, start_date=days_ago(10), end_date=todays_date()):
         """
@@ -356,7 +359,7 @@ class RestingHeartRate():
         current_date = start_date
         index = 0
 
-        with self.data_source.open(self.data_path + start_date.strftime('%Y-03-01') + '.json') as f:
+        with self.data_source.open(self.data_path + start_date.strftime(self.hint) + '.json') as f:
             json_data = json.load(f)
         for json_entry in json_data:
             json_date = json_entry['value']['date']

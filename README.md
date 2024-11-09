@@ -7,7 +7,7 @@
 
 <!-- ![pyFitOut logo](https://github.com/kev-m/pyFitOut/blob/development/docs/source/figures/Logo_small.png) -->
 
-The **pyFitOut** project is an open source Python library for extracting FitBit health data from Google Takeout.
+The **pyFitOut** project is an open source Python library for extracting FitBit data from Google Takeout.
 
 <!-- For detailed documentation, refer to the [pyFitOut Documentation](https://pyFitOut.readthedocs.io/). -->
 
@@ -32,6 +32,7 @@ Export your [FitBit data](https://www.fitbit.com/settings/data/export), using [G
 Once the export is complete, download the zip file and extract it. I use `C:\Dev\Fitbit\Google\Takeout`. 
 This directory is the `takeout_dir`.
 
+### Trivial Example
 ```python
 import fitout as fo
 from datetime import date
@@ -66,6 +67,78 @@ def main():
     print("RHR:", rhr_data)
 
 
+if __name__ == "__main__":
+    main()
+```
+
+### Plotting Example with Numpy and Matplotlib
+```python
+from datetime import date
+import numpy as np
+import matplotlib.pyplot as plt
+import fitout as fo
+
+def main():
+    # Specify the location where the Takeout zip files was extracted
+    takeout_dir = "C:\Dev\Fitbit\Google\Takeout"
+    # Use the NativeFileLoader to load the data from the extracted files
+    data_source = fo.NativeFileLoader(takeout_dir)
+
+    # Specify the desired date range.
+    start_date = date(2024, 10, 1)
+    end_date = date(2024, 11, 30)
+
+    # Generate a list of dates for the date range, for informational or plotting purposes.
+    dates = fo.dates_array(start_date, end_date)
+
+    # Create the breathing rate importer and fetch the data.
+    breather_importer = fo.BreathingRate(data_source, 1)
+    breathing_data = breather_importer.get_data(start_date, end_date)
+
+    # Create the heart rate variability importer and fetch the data.
+    hrv_importer = fo.HeartRateVariability(data_source)
+    hrv_data = hrv_importer.get_data(start_date, end_date)
+
+    # Create the resting heart rate importer and fetch the data.
+    rhr_importer = fo.RestingHeartRate(data_source)
+    rhr_data = rhr_importer.get_data(start_date, end_date)
+
+    # Convert lists to numpy arrays
+    dates_array = np.asarray(dates)
+    breathing_data_array = np.array(breathing_data).astype(float)
+    hrv_data_array = np.array(hrv_data).astype(float)
+    rhr_data_array = np.array(rhr_data).astype(float)
+
+    #print("Dates array:", dates_array)
+    #print("Breathing data array:", breathing_data_array)
+    #print("HRV data array:", hrv_data_array)
+    #print("RHR data array:", rhr_data_array)
+
+    # Create a combined calmness index as follows: 100-(RHR/2 + breathing rate*2 - HRV)
+    calmness_index = 100 - (rhr_data_array / 2. + breathing_data_array * 2. - hrv_data_array)
+    #print("Calmness index:", calmness_index)
+
+    # Plot the calmness index
+    plt.figure(figsize=(10, 6))
+    plt.plot(dates_array, calmness_index, marker='o', linestyle='-', color='b')
+    plt.xlabel('Date')
+    plt.ylabel('Calmness Index')
+    plt.title('Calmness Index Over Time')
+    plt.grid(True)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    
+    # Fit a 4th order polynomial to the calmness index data
+    dates_axis = np.arange(len(dates_array))
+    polynomial_coefficients = np.polyfit(dates_axis, calmness_index, 4)
+    polynomial = np.poly1d(polynomial_coefficients)
+    fitted_calmness_index = polynomial(dates_axis)
+
+    # Plot the fitted polynomial
+    plt.plot(dates_array, fitted_calmness_index, linestyle='--', color='r', label='4th Order Polynomial Fit')
+    plt.legend()
+
+    plt.show()
 if __name__ == "__main__":
     main()
 ```
