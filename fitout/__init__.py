@@ -63,6 +63,56 @@ def number_precision(value, precision):
     return round(value, precision)
 
 
+# Data loading classes
+# Abstract base class for data loaders
+class BaseFileLoader():
+    """
+    Abstract class used to handle different data file sources.
+    Methods:
+        open(str):
+            Opens a file from the data source, returning a file object.
+    """
+
+    def open(self):
+        """
+        Opens a file from the data source and returns a file handle.
+        """
+        pass
+
+
+# Data source that can read files from a directory
+class NativeFileLoader(BaseFileLoader):
+    """
+    A class used to load data from files in a directory structure.
+    Attributes:
+        file_path (str): The path to the root directory.
+    Methods:
+        open(str):
+            Opens a file from the directory, returning a file object.
+    """
+
+    def __init__(self, dir_path):
+        """
+        Constructs all the necessary attributes for the NativeFileLoader object.
+
+        Args:
+            dir_path (str): The path to the top level directory.
+        """
+        self.dir_path = dir_path
+
+    def open(self, file_path):
+        """
+        Loads data from the file and returns it.
+
+        Args:
+            file_path (str): The path to the file to be loaded.
+        
+        Returns:
+            str: The data loaded from the file.
+        """
+        return open(self.dir_path + file_path, 'r')
+
+
 # Data processing classes
 
 # Base CSV reader
@@ -70,6 +120,7 @@ class BasicCSVImporter:
     """
     A class used to import data from a CSV file.
     Attributes:
+        data_source (BaseFileLoader): The data source object used to open files.
         data_path (str): The path to the directory containing the CSV files.
         precision (int): The precision for numerical data (default is 0).
     Methods:
@@ -77,22 +128,14 @@ class BasicCSVImporter:
             Reads a CSV file and returns the columns and data.
     """
 
-    def __init__(self, data_path, precision=0):
+    def __init__(self, data_source, data_path, precision=0):
         """
         Constructs all the necessary attributes for the BasicCSVImporter object.
         Args:
             data_path (str): The path to the directory containing the CSV files.
             precision (int): The precision for numerical data (default is 0).
         """
-        """
-        Reads a CSV file and returns the columns and data.
-        Args:
-            file_path (str): The path to the CSV file to be read.
-        Returns:
-            tuple: A tuple containing two elements:
-                - cols (list): A list of column names.
-                - data (list): A list of rows, where each row is a list of values.
-        """
+        self.data_source = data_source
         self.data_path = data_path
         self.precision = precision
 
@@ -108,7 +151,7 @@ class BasicCSVImporter:
             - cols (list): A list of column names.
             - data (list): A list of rows, where each row is a list of values.
         """
-        with open(file_path, 'r') as f:
+        with self.data_source.open(file_path) as f:
             reader = csv.reader(f)
             rows = list(reader)
             cols = rows[0]
@@ -196,7 +239,7 @@ class BreathingRate(TwoLineCSVImporter):
     daily_respiratory_rate: Breathing rate average estimated from deep sleep when possible, and from light sleep when deep sleep data is not available.
     """
 
-    def __init__(self, takeout_path, precision=0):
+    def __init__(self, data_source, precision=0):
         """
         Constructs the nightly Breathing Rate class instance.
 
@@ -205,7 +248,7 @@ class BreathingRate(TwoLineCSVImporter):
             precision (int): The precision for numerical data (default is 0).
         """
         # C:\Dev\Fitbit\Google\Takeout\Fitbit\Heart Rate Variability\Daily Respiratory Rate Summary - 2024-07-22.csv
-        super().__init__(takeout_path +
+        super().__init__(data_source,
                          '/Fitbit/Heart Rate Variability/Daily Respiratory Rate Summary - ', precision)
         self.data = {}
 
@@ -236,7 +279,7 @@ class HeartRateVariability(TwoLineCSVImporter):
     entropy:  Entropy quantifies randomness or disorder in a system. High entropy indicates high HRV. Entropy is measured from the histogram of time interval between successive heart beats values measured during sleep.
     """
 
-    def __init__(self, takeout_path, precision=0):
+    def __init__(self, data_source, precision=0):
         """
         Constructs the nightly Heart Rate Variability class instance.
 
@@ -247,7 +290,7 @@ class HeartRateVariability(TwoLineCSVImporter):
         # C:\Dev\Fitbit\Google\Takeout\Fitbit\Heart Rate Variability\Daily Heart Rate Variability Summary - 2024-07-(21).csv
         # timestamp,rmssd,nremhr,entropy
         # 2024-07-21T00:00:00,29.232,49.623,2.472
-        super().__init__(takeout_path +
+        super().__init__(data_source,
                          '/Fitbit/Heart Rate Variability/Daily Heart Rate Variability Summary - ')
         self.data = {}
 
@@ -275,12 +318,12 @@ class RestingHeartRate():
     Importer for daily resting heart rate data.
     """
 
-    def __init__(self, takeout_path, precision=0):
+    def __init__(self, data_source, precision=0):
         """
         Constructs the nightly Resting Heart Rate class instance.
 
         Args:
-            takeout_path (str): The path to the directory containing the Fitbit data.
+            data_source (BaseFileLoader): The data source used to load data.
             precision (int): The precision for numerical data (default is 0).
         """
         # C:\Dev\Fitbit\Google\Takeout\Fitbit\Global Export Data\resting_heart_rate-2024-03-01.json
@@ -295,7 +338,8 @@ class RestingHeartRate():
         # ...
         #
         self.precision = precision
-        self.data_path = takeout_path + '/Fitbit/Global Export Data/resting_heart_rate-'
+        self.data_source = data_source
+        self.data_path = '/Fitbit/Global Export Data/resting_heart_rate-'
 
     def get_data(self, start_date=days_ago(10), end_date=todays_date()):
         """
@@ -312,7 +356,7 @@ class RestingHeartRate():
         current_date = start_date
         index = 0
 
-        with open(self.data_path + start_date.strftime('%Y-03-01') + '.json', 'r') as f:
+        with self.data_source.open(self.data_path + start_date.strftime('%Y-03-01') + '.json') as f:
             json_data = json.load(f)
         for json_entry in json_data:
             json_date = json_entry['value']['date']
