@@ -1,6 +1,6 @@
-"""Fitbit Google Takeout data parser."""
+"""A Python library to process FitBit Google Takeout data."""
 # Semantic Versioning according to https://semver.org/spec/v2.0.0.html
-__version__ = "v0.0.1"  # First release
+__version__ = "v0.0.2"  # Updating instructions.
 
 import csv
 from datetime import date, timedelta

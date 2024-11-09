@@ -45,16 +45,20 @@ git push --tags
 
 ## Building the Package
 
-The sources are published as two packages using `flit` to build and publish the artifacts.
+The library is published using `flit` to build and publish the artifact.
 
-The project details are defined in the `pyproject.toml` files. The version and description are defined in the top-level `__init__.py` file for each package.
+**NOTE:** Ensure that PyPI configuration is set up correctly, e.g. that servers and authentication are defined in the `~/.pypirc` file.
+
+The project details are defined in the `pyproject.toml` files. The version and description are defined in the top-level `__init__.py` file.
 
 This project uses [semantic versioning](https://semver.org/).
 
-Build and publish the main artifact:
+Build and publish the library:
 ```bash
 $ flit build
 $ flit publish
+# or
+$ flit --repository testpypi publish
 ```
 ## Make a GitHub Release
 
@@ -63,6 +67,6 @@ Go to the GitHub project administration page and [publish a release](https://git
 Update the `release` branch:
 ```bash
 git checkout release
-git rebase master
+git rebase development
 git push
 ```

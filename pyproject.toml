@@ -4,8 +4,6 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "fitout"
-version = "0.0.1"
-description = "A Python library to process FitBit Google Takeout data."
 authors = [
         {name = "Kevin Meyer", email = "kevin@kmz.co.za"}
 ]
@@ -24,7 +22,6 @@ classifiers = [
     "Programming Language :: Python :: 3.10"
 ]
 
-requires-python = ">=3.6"
 keywords = [
     "FitBitbit",
     "Google Takeout",
@@ -40,7 +37,7 @@ Source = "https://github.com/kev-m/pyFitOut"
 Changelog = "https://github.com/kev-m/pyFitOut/blob/release/CHANGELOG.md"
 Contributing = "https://github.com/kev-m/pyFitOut/blob/release/CONTRIBUTING.md"
 
-[project.dependencies]
+#[project.dependencies]
 # List of dependencies required to run the project
 
 [tool.pytest.ini_options]
@@ -49,7 +46,7 @@ addopts = "-v --strict-markers"
 testpaths = ["tests"]
 
 [tool.flit.module]
-name = "pyFitOut"
+name = "fitout"
 
 [tool.flit.sdist]
 include = [
