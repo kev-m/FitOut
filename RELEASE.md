@@ -36,7 +36,7 @@ git tag v0.0.9
 **pyFitOut** uses `auto-changelog` to parse git commit messages and generate the `CHANGELOG.md`.
 
 ```bash
-auto-changelog
+auto-changelog --tag-prefix v
 git add CHANGELOG.md
 git commit -m "Updating CHANGELOG"
 git push
