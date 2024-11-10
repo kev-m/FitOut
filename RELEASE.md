@@ -57,8 +57,6 @@ Build and publish the library:
 ```bash
 $ flit build
 $ flit publish
-# or
-$ flit --repository testpypi publish
 ```
 ## Make a GitHub Release
 
