@@ -25,7 +25,7 @@ How to use pyFitOut:
 ### Export
 Export your [FitBit data](https://www.fitbit.com/settings/data/export), using [Google Takeout](https://takeout.google.com/settings/takeout/custom/fitbit?pli=1).
 
-**Note:** Currently only export to zip is supported.
+**Note:** Currently only export to zip is supported, and the zip files must be extracted to your local drive.
 
 Once the export is complete, download the zip file and extract it. I use `C:\Dev\Fitbit\Google\Takeout`. 
 This directory is the `takeout_dir`.
@@ -100,6 +100,17 @@ def main():
     # Create the resting heart rate importer and fetch the data.
     rhr_importer = fo.RestingHeartRate(data_source)
     rhr_data = rhr_importer.get_data(start_date, end_date)
+
+    # Fill in missing values with the mean of the neighbouring values
+    breathing_data = fo.fill_missing_with_neighbours(breathing_data)
+    hrv_data = fo.fill_missing_with_neighbours(hrv_data)
+    rhr_data = fo.fill_missing_with_neighbours(rhr_data)
+
+    # Adjust buggy data (typically values that are too high or too low) to the mean of the neighbouring values
+    # These values depend on your personal ranges.
+    breathing_data = fo.fix_invalid_data_points(breathing_data, 10, 20)
+    hrv_data = fo.fix_invalid_data_points(hrv_data, 20, 50)
+    rhr_data = fo.fix_invalid_data_points(rhr_data, 46, 54)
 
     # Convert lists to numpy arrays
     dates_array = np.asarray(dates)

@@ -65,6 +65,54 @@ def number_precision(value, precision):
     return value
 
 
+def fill_missing_with_neighbours(data_list):
+    """
+    Replaces missing values in a list with the average of the neighbouring values.
+
+    Args:
+        data_list (list): A list of data values, where some values may be None. 
+
+    Returns:
+        list: A list with missing values replaced by the average of the neighbouring values.
+    """
+    for i in range(1, len(data_list) - 1):
+        if data_list[i] is None:
+            if i > 0 and i < len(data_list) - 1:
+                # Replace with average of neighbours, if they exist
+                data_list[i] = (data_list[i - 1] + data_list[i + 1])/2.
+            elif i == 0:
+                # Replace with next value, if at the beginning
+                data_list[i] = data_list[i + 1]
+            else:
+                # Replace with previous value, if at the end
+                data_list[i] = data_list[i - 1]
+    return data_list
+
+
+def fix_invalid_data_points(data_list, min_value, max_value):
+    """
+    Replaces out-of-range values in a list with the average of the neighbouring values.
+
+    Args:
+        data_list (list): A list of data values, where some values may be out of range. 
+
+    Returns:
+        list: A list with dubious values replaced by the average of the neighbouring values.
+    """
+    for i in range(1, len(data_list) - 1):
+        if data_list[i] < min_value or data_list[i] > max_value:
+            if i > 0 and i < len(data_list) - 1:
+                # Replace with average of neighbours, if they exist
+                data_list[i] = (data_list[i - 1] + data_list[i + 1])/2.
+            elif i == 0:
+                # Replace with next value, if at the beginning
+                data_list[i] = data_list[i + 1]
+            else:
+                # Replace with previous value, if at the end
+                data_list[i] = data_list[i - 1]
+    return data_list
+
+
 # Data loading classes
 # Abstract base class for data loaders
 class BaseFileLoader():
@@ -97,6 +145,7 @@ class BaseFileLoader():
         """
         pass
 
+
 # Data source that can read files from a directory
 class NativeFileLoader(BaseFileLoader):
     """
@@ -123,7 +172,7 @@ class NativeFileLoader(BaseFileLoader):
 
         Args:
             file_path (str): The path to the file to be loaded.
-        
+
         Returns:
             str: The data loaded from the file.
         """
@@ -151,7 +200,7 @@ class NativeFileLoader(BaseFileLoader):
         # Sort the files and find the one that is after the current_date
         files.sort()
         for file in files:
-            file_date_str = file[-len('YYYY-mm-dd.json'):].split('.')[0] # 
+            file_date_str = file[-len('YYYY-mm-dd.json'):].split('.')[0]
             file_date = datetime.strptime(file_date_str, '%Y-%m-%d').date()
             if (current_date >= file_date) and (current_date < file_date + timedelta(days=365)):
                 return data_path + file_date_str + '.json'
@@ -406,17 +455,19 @@ class RestingHeartRate():
         index = 0
 
         while index < num_days:
-            json_filename = self.data_source.get_json_filename(self.data_path + self.data_file, current_date)
+            json_filename = self.data_source.get_json_filename(
+                self.data_path + self.data_file, current_date)
             with self.data_source.open(json_filename) as f:
                 json_data = json.load(f)
             for json_entry in json_data:
                 json_date = json_entry['value']['date']
-                if json_date is None:
+                if index > 0 and json_date is None:
                     # We've run out of data in the data file, return what we have
                     return self.data
                 json_value = json_entry['value']['value']
                 if json_date == current_date.strftime('%m/%d/%y'):
-                    self.data[index] = number_precision(json_value, self.precision)
+                    self.data[index] = number_precision(
+                        json_value, self.precision)
                     self.dates[index] = current_date
                     index += 1
                     current_date += timedelta(days=1)
