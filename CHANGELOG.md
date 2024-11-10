@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.0.5 (2024-11-10)
+
+#### Fixes
+
+* Adding some data cleanup routines.
+
+Full set of changes: [`v0.0.4...v0.0.5`](https://github.com/kev-m/pyFitOut/compare/v0.0.4...v0.0.5)
+
 ## v0.0.4 (2024-11-10)
 
 #### Fixes
