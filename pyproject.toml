@@ -41,9 +41,14 @@ Contributing = "https://github.com/kev-m/pyFitOut/blob/release/CONTRIBUTING.md"
 # List of dependencies required to run the project
 
 [tool.pytest.ini_options]
-minversion = "6.0"
-addopts = "-v --strict-markers"
-testpaths = ["tests"]
+addopts = [
+    "--import-mode=importlib",
+]
+testpaths = [
+    "tests",
+]
+pythonpath = "."
+
 
 [tool.flit.module]
 name = "fitout"
