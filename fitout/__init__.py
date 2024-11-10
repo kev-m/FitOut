@@ -411,6 +411,9 @@ class RestingHeartRate():
                 json_data = json.load(f)
             for json_entry in json_data:
                 json_date = json_entry['value']['date']
+                if json_date is None:
+                    # We've run out of data in the data file, return what we have
+                    return self.data
                 json_value = json_entry['value']['value']
                 if json_date == current_date.strftime('%m/%d/%y'):
                     self.data[index] = number_precision(json_value, self.precision)
