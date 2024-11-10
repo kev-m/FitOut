@@ -16,8 +16,6 @@ The **pyFitOut** project is an open source Python library for extracting FitBit 
 Use pip to install:
 ```bash
 pip install fitout
-# or
-pip install -i https://test.pypi.org/simple/ fitout
 ```
 
 ## Example
@@ -86,7 +84,7 @@ def main():
 
     # Specify the desired date range.
     start_date = date(2024, 10, 1)
-    end_date = date(2024, 11, 30)
+    end_date = date(2024, 10, 31)
 
     # Generate a list of dates for the date range, for informational or plotting purposes.
     dates = fo.dates_array(start_date, end_date)
