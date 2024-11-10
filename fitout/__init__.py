@@ -1,10 +1,11 @@
 """A Python library to extract FitBit Google Takeout data."""
 # Semantic Versioning according to https://semver.org/spec/v2.0.0.html
-__version__ = "v0.0.3"  # Updating instructions with examples using Numpy.
+__version__ = "v0.0.4"  # Adding automatic detection of RHR JSON files
 
 import csv
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 import json
+import glob
 
 
 # Date helpers
@@ -80,6 +81,21 @@ class BaseFileLoader():
         """
         pass
 
+    def _get_json_filename(self, data_path, current_date):
+        """
+        Returns the actual JSON filename, based on the data path and the current date.
+
+        Google Takeout data sometimes has a single file for a years worth of data, starting with a
+        random day, possibly based on when the FitBit was activated. This method finds the correct
+        file for the current date.
+
+        Args:
+            current_date (datetime.date): The current date for which the file name is to be generated.
+
+        Returns:
+            str: The actual file name.
+        """
+        pass
 
 # Data source that can read files from a directory
 class NativeFileLoader(BaseFileLoader):
@@ -112,6 +128,36 @@ class NativeFileLoader(BaseFileLoader):
             str: The data loaded from the file.
         """
         return open(self.dir_path + file_path, 'r')
+
+    def get_json_filename(self, data_path, current_date):
+        """
+        Returns the actual JSON filename, based on the data path and the current date.
+
+        Google Takeout data sometimes has a single file for a years worth of data, starting with a
+        random day, possibly based on when the FitBit was activated. This method finds the correct
+        file for the current date.
+
+        Args:
+            current_date (datetime.date): The current date for which the file name is to be generated.
+
+        Returns:
+            str: The actual file name.
+        """
+
+        # Find all JSON files that start with the year of the current_date
+        pattern = self.dir_path + data_path + '*.json'
+        files = glob.glob(pattern)
+
+        # Sort the files and find the one that is after the current_date
+        files.sort()
+        for file in files:
+            file_date_str = file[-len('YYYY-mm-dd.json'):].split('.')[0] # 
+            file_date = datetime.strptime(file_date_str, '%Y-%m-%d').date()
+            if (current_date >= file_date) and (current_date < file_date + timedelta(days=365)):
+                return data_path + file_date_str + '.json'
+
+        # If no file is found, return None or raise an error
+        return None
 
 
 # Data processing classes
@@ -319,7 +365,7 @@ class RestingHeartRate():
     Importer for daily resting heart rate data.
     """
 
-    def __init__(self, data_source, precision=0, hint='%Y-03-01'):
+    def __init__(self, data_source, precision=0):
         """
         Constructs the nightly Resting Heart Rate class instance.
 
@@ -341,8 +387,8 @@ class RestingHeartRate():
         #
         self.precision = precision
         self.data_source = data_source
-        self.data_path = '/Fitbit/Global Export Data/resting_heart_rate-'
-        self.hint = hint
+        self.data_path = '/Fitbit/Global Export Data/'
+        self.data_file = 'resting_heart_rate-'
 
     def get_data(self, start_date=days_ago(10), end_date=todays_date()):
         """
@@ -359,18 +405,20 @@ class RestingHeartRate():
         current_date = start_date
         index = 0
 
-        with self.data_source.open(self.data_path + start_date.strftime(self.hint) + '.json') as f:
-            json_data = json.load(f)
-        for json_entry in json_data:
-            json_date = json_entry['value']['date']
-            json_value = json_entry['value']['value']
-            if json_date == current_date.strftime('%m/%d/%y'):
-                self.data[index] = number_precision(json_value, self.precision)
-                self.dates[index] = current_date
-                index += 1
-                current_date += timedelta(days=1)
-            if index == num_days:
-                break
+        while index < num_days:
+            json_filename = self.data_source.get_json_filename(self.data_path + self.data_file, current_date)
+            with self.data_source.open(json_filename) as f:
+                json_data = json.load(f)
+            for json_entry in json_data:
+                json_date = json_entry['value']['date']
+                json_value = json_entry['value']['value']
+                if json_date == current_date.strftime('%m/%d/%y'):
+                    self.data[index] = number_precision(json_value, self.precision)
+                    self.dates[index] = current_date
+                    index += 1
+                    current_date += timedelta(days=1)
+                if index == num_days:
+                    break
             # TODO: Handle missing data and errors
 
         return self.data
