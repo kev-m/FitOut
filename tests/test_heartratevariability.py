@@ -1,7 +1,7 @@
 from datetime import date
 import pytest
 from unittest.mock import MagicMock
-from fitout import RestingHeartRate
+from fitout import RestingHeartRate, NativeFileLoader
 
 
 @pytest.fixture
@@ -34,6 +34,17 @@ def mock_datasource_str():
 def test_resting_heart_rate_trivial(mock_datasource_str):
     rhr = RestingHeartRate(mock_datasource_str)
     rhr_data = rhr.get_data(date(2024, 10, 2), date(2024, 10, 3))
+
+    assert rhr_data is not None
+    assert isinstance(rhr_data, list)
+    assert len(rhr_data) == 2
+    assert rhr_data == [53, 54]
+
+def test_resting_heart_rate_files():
+    test_source = NativeFileLoader('tests/')
+    rhr = RestingHeartRate(data_source=test_source)
+    rhr.data_path = 'data/'
+    rhr_data = rhr.get_data(date(2024, 2, 29), date(2024, 3, 1))
 
     assert rhr_data is not None
     assert isinstance(rhr_data, list)
