@@ -69,7 +69,7 @@ class NativeFileLoader(BaseFileLoader):
         """
         return open(self.dir_path + file_path, 'r')
 
-    def get_json_filename(self, data_path, current_date):
+    def get_json_filename(self, data_path, current_date, date_increment_days=365):
         """
         Returns the actual JSON filename, based on the data path and the current date.
 
@@ -93,7 +93,7 @@ class NativeFileLoader(BaseFileLoader):
         for file in files:
             file_date_str = file[-len('YYYY-mm-dd.json'):].split('.')[0]
             file_date = datetime.strptime(file_date_str, '%Y-%m-%d').date()
-            if (current_date >= file_date) and (current_date < file_date + timedelta(days=365)):
+            if (current_date >= file_date) and (current_date < file_date + timedelta(days=date_increment_days)):
                 return data_path + file_date_str + '.json'
 
         # If no file is found, return None or raise an error
