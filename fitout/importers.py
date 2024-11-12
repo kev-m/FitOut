@@ -345,31 +345,7 @@ class BasicSleepInfo(BaseImporter):
         #   "infoCode" : 0,
         #   "logType" : "manual",
         #   "levels" : {
-        #     "summary" : {
-        #       "deep" : {
-        #         "count" : 4,
-        #         "minutes" : 102,
-        #         "thirtyDayAvgMinutes" : 67
-        #       },
-        #       "wake" : {
-        #         "count" : 35,
-        #         "minutes" : 57,
-        #         "thirtyDayAvgMinutes" : 59
-        #       },
-        #       "light" : {
-        #         "count" : 32,
-        #         "minutes" : 255,
-        #         "thirtyDayAvgMinutes" : 296
-        #       },
-        #       "rem" : {
-        #         "count" : 8,
-        #         "minutes" : 117,
-        #         "thirtyDayAvgMinutes" : 100
-        #       }
-        #     },
-        #     "data" : [
-        #         <out of scope>
-        #     ]
+        #      <out of scope>
         #   },
         #   "mainSleep" : true
         # },{
@@ -405,10 +381,15 @@ class BasicSleepInfo(BaseImporter):
 
         current_date = start_date
         index = 0
+        last_file = None
 
         while index < num_days:
-            json_filename = self.data_source.get_json_filename(
-                self.data_path + self.data_file, current_date, 30)
+            json_filename = self.data_source.get_json_filename(self.data_path + self.data_file, current_date, 30)
+            if json_filename == last_file:
+                # We've run out of data in the data files, return what we have
+                print("No more data for", current_date, json_filename)
+                return self.data
+            last_file = json_filename
             with self.data_source.open(json_filename) as f:
                 json_data = json.load(f)
                 last_json_date = None
@@ -417,8 +398,7 @@ class BasicSleepInfo(BaseImporter):
                     if index > 0 and json_date_str is None:
                         return self.data
 
-                    json_date = datetime.strptime(
-                        json_date_str, '%Y-%m-%d').date()
+                    json_date = datetime.strptime(json_date_str, '%Y-%m-%d').date()
 
                     # Catch up to the current or start date
                     if json_date < current_date:
@@ -453,19 +433,20 @@ class BasicSleepInfo(BaseImporter):
                         if last_json_date != json_date_str:
                             # For the first sleep, capture all details
                             for key in self.data.keys():
-                                self.data[key][index] = json_entry.get(
-                                    key, None)
+                                self.data[key][index] = json_entry.get(key, None)
                         else:
                             # If the current date is the same as the last date, we need to update the endTime and minutesAwake
                             # of the main sleep entry.
                             # self.data[key][index]
                             # print(json_entry)
-                            print("Non-main sleep detected, updating main sleep",json_start_date, json_start_time, json_end_time)
+                            print("Non-main sleep detected, updating main sleep",
+                                  json_start_date, json_start_time, json_end_time)
                             # Increment the minutesAwake of the main sleep with the minutesAwake of the non-main sleep
                             self.data["minutesAwake"][index] += json_entry.get("minutesAwake", 0)
                             # Increment the minutesAwake of the main sleep with the minutes between the last endTime and the current startTime
                             last_wake_time = datetime.strptime(self.data["endTime"][index], '%Y-%m-%dT%H:%M:%S.%f')
-                            this_sleep_time = datetime.strptime(json_entry.get("startTime", None), '%Y-%m-%dT%H:%M:%S.%f')
+                            this_sleep_time = datetime.strptime(json_entry.get(
+                                "startTime", None), '%Y-%m-%dT%H:%M:%S.%f')
                             delta_minutes = (this_sleep_time - last_wake_time).seconds // 60
                             self.data["minutesAwake"][index] += delta_minutes
                             # Update endTime to the current endTime
