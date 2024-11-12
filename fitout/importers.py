@@ -1,15 +1,58 @@
 """A Python library to extract FitBit Google Takeout data."""
 
 import csv
-from datetime import timedelta
+from datetime import timedelta, time, datetime
 import json
 
 from .helpers import days_ago, todays_date, number_precision
 
 
 # Data processing classes
+# Base importer class
+class BaseImporter:
+    """
+    Abstract base class for data importers.
+
+    Attributes:
+        data_source (BaseFileLoader): The data source object used to open files.
+        data_path (str): The path to the directory containing the data files.
+        precision (int): The precision for numerical data (default is 0).
+    Methods:
+        get_data(start_date, end_date):
+            Retrieves data for a range of dates from start_date to end_date.
+    """
+
+    def __init__(self, data_source, data_path, precision=0):
+        """
+        Constructs all the necessary attributes for the BaseImporter object.
+
+        Args:
+            data_source (BaseFileLoader): The data source object used to open files.
+            data_path (str): The path to the directory containing the data files.
+            precision (int): The precision for numerical data (default is 0).
+        """
+        self.data_source = data_source
+        self.data_path = data_path
+        self.precision = precision
+
+    def get_data(self, start_date=days_ago(10), end_date=todays_date()):
+        """
+        Retrieves data for a range of dates from start_date to end_date.
+
+        This abstract method must be implemented by subclasses.
+
+        Args:
+            start_date (datetime.date): The start date for data retrieval.
+            end_date (datetime.date): The end date for data retrieval.
+
+        Returns:
+            list: A list of data for each date in the specified range.
+        """
+        pass
+
+
 # Base CSV reader
-class BasicCSVImporter:
+class BasicCSVImporter(BaseImporter):
     """
     A class used to import data from a CSV file.
     Attributes:
@@ -20,17 +63,6 @@ class BasicCSVImporter:
         read_csv(file_path):
             Reads a CSV file and returns the columns and data.
     """
-
-    def __init__(self, data_source, data_path, precision=0):
-        """
-        Constructs all the necessary attributes for the BasicCSVImporter object.
-        Args:
-            data_path (str): The path to the directory containing the CSV files.
-            precision (int): The precision for numerical data (default is 0).
-        """
-        self.data_source = data_source
-        self.data_path = data_path
-        self.precision = precision
 
     def read_csv(self, file_path):
         """
@@ -163,13 +195,17 @@ class HeartRateVariability(TwoLineCSVImporter):
     """
     Importer for daily heart rate variability data.
 
-    Heart rate variability (HRV) is the physiological phenomenon of variation in the time interval between heartbeats. It is measured by the variation in the beat-to-beat interval.
+    Heart rate variability (HRV) is the physiological phenomenon of variation in the time interval between heartbeats. 
+    It is measured by the variation in the beat-to-beat interval.
 
-    The "Daily Heart Rate Variability Summary" files include daily granularity recordings of your HRV during a sleep. The description for the values of each row is as follows:
+    The "Daily Heart Rate Variability Summary" files include daily granularity recordings of your HRV during a sleep. 
+    The description for the values of each row is as follows:
 
-    rmssd: Root mean squared value of the successive differences of time interval between successive heart beats., measured during sleep.
-    nremhr:  Heart rate measured during non-REM sleep (i.e. light and deep sleep stages).
-    entropy:  Entropy quantifies randomness or disorder in a system. High entropy indicates high HRV. Entropy is measured from the histogram of time interval between successive heart beats values measured during sleep.
+        rmssd: Root mean squared value of the successive differences of time interval between successive heart beats, 
+            measured during sleep.
+        nremhr:  Heart rate measured during non-REM sleep (i.e. light and deep sleep stages).
+        entropy:  Entropy quantifies randomness or disorder in a system. High entropy indicates high HRV. Entropy 
+            is measured from the histogram of time interval between successive heart beats values measured during sleep.
     """
 
     def __init__(self, data_source, precision=0):
@@ -185,7 +221,6 @@ class HeartRateVariability(TwoLineCSVImporter):
         # 2024-07-21T00:00:00,29.232,49.623,2.472
         super().__init__(data_source,
                          '/Fitbit/Heart Rate Variability/Daily Heart Rate Variability Summary - ')
-        self.data = {}
 
     def _get_dailydata_filename(self, current_date):
         """
@@ -206,7 +241,7 @@ class HeartRateVariability(TwoLineCSVImporter):
 
 
 # Importer for overnight resting heart rate data
-class RestingHeartRate():
+class RestingHeartRate(BaseImporter):
     """
     Importer for daily resting heart rate data.
     """
@@ -218,7 +253,6 @@ class RestingHeartRate():
         Args:
             data_source (BaseFileLoader): The data source used to load data.
             precision (int): The precision for numerical data (default is 0).
-            hint (str): The hint for the date format in the file name (default is '%Y-03-01').
         """
         # C:\Dev\Fitbit\Google\Takeout\Fitbit\Global Export Data\resting_heart_rate-2024-03-01.json
         # [{
@@ -231,9 +265,7 @@ class RestingHeartRate():
         # },
         # ...
         #
-        self.precision = precision
-        self.data_source = data_source
-        self.data_path = '/Fitbit/Global Export Data/'
+        super().__init__(data_source, '/Fitbit/Global Export Data/', precision)
         self.data_file = 'resting_heart_rate-'
 
     def get_data(self, start_date=days_ago(10), end_date=todays_date()):
@@ -271,5 +303,182 @@ class RestingHeartRate():
                 if index == num_days:
                     break
             # TODO: Handle missing data and errors
+
+        return self.data
+
+
+class BasicSleepInfo(BaseImporter):
+    """
+    Importer for basic overnight sleep data.
+    """
+
+    def __init__(self, data_source, precision=0, sleep_time=time(22, 0, 0), wake_time=time(6, 0, 0)):
+        """
+        Constructs the nightly sleep information importer instance.
+
+        Sleep events during the day, i.e. after wake_time but before sleep_time, are excluded. 
+
+        Args:
+            data_source (BaseFileLoader): The data source used to load data.
+            precision (int): The precision for numerical data (default is 0).
+            sleep_time (datetime.time): The time to consider as the start of sleep (default is 22:00).
+            wake_time (datetime.time): The time to consider as the end of sleep (default is 06:00).
+        """
+        # C:\Dev\Fitbit\Google\Takeout\Fitbit\Global Export Data\sleep-2022-03-02.json
+        # C:\Dev\Fitbit\Google\Takeout\Fitbit\Global Export Data\sleep-2022-04-01.json
+        # ...
+        # C:\Dev\Fitbit\Google\Takeout\Fitbit\Global Export Data\sleep-2024-10-17.json
+        # Each file spans one month (30 days) of sleep data, in reverse chronological order.
+        # [{
+        #   "logId" : 44940631937,
+        #   "dateOfSleep" : "2024-03-21",
+        #   "startTime" : "2024-03-20T22:04:00.000",
+        #   "endTime" : "2024-03-21T06:55:30.000",
+        #   "duration" : 31860000,
+        #   "minutesToFallAsleep" : 5,
+        #   "minutesAsleep" : 474,
+        #   "minutesAwake" : 57,
+        #   "minutesAfterWakeup" : 1,
+        #   "timeInBed" : 531,
+        #   "efficiency" : 96,
+        #   "type" : "stages",
+        #   "infoCode" : 0,
+        #   "logType" : "manual",
+        #   "levels" : {
+        #     "summary" : {
+        #       "deep" : {
+        #         "count" : 4,
+        #         "minutes" : 102,
+        #         "thirtyDayAvgMinutes" : 67
+        #       },
+        #       "wake" : {
+        #         "count" : 35,
+        #         "minutes" : 57,
+        #         "thirtyDayAvgMinutes" : 59
+        #       },
+        #       "light" : {
+        #         "count" : 32,
+        #         "minutes" : 255,
+        #         "thirtyDayAvgMinutes" : 296
+        #       },
+        #       "rem" : {
+        #         "count" : 8,
+        #         "minutes" : 117,
+        #         "thirtyDayAvgMinutes" : 100
+        #       }
+        #     },
+        #     "data" : [
+        #         <out of scope>
+        #     ]
+        #   },
+        #   "mainSleep" : true
+        # },{
+        #   .....
+        #
+        super().__init__(data_source, '/Fitbit/Global Export Data/', precision)
+        self.data_file = 'sleep-'
+        self.sleep_time = sleep_time
+        self.wake_time = wake_time
+
+    def get_data(self, start_date=days_ago(10), end_date=todays_date()):
+        """
+        Retrieves data for a range of dates from start_date to end_date.
+
+        This function parses the sleep data from the Fitbit Google Takeout data files and returns a partially processed
+        result. At most one entry is created per day, even if there are multiple sleep entries in the data file.
+
+        When a sleep entry is not the main sleep, the endTime is updated, and the `minutesAwake` is added to the main sleep.
+
+        Args:
+            start_date (datetime.date, optional): The start date for data retrieval. Defaults to 10 days ago.
+            end_date (datetime.date, optional): The end date for data retrieval. Defaults to today's date.
+        Returns:
+            dic (int): The overnight resting heart rate in the specified range.
+        """
+        end_date += timedelta(
+            days=1)  # Include the end date, to get the last night's sleep.
+        num_days = (end_date - start_date).days + 1
+        self.data = {key: [None] * num_days for key in ["dateOfSleep", "startTime", "endTime", "duration", "minutesToFallAsleep",
+                                                        "minutesAsleep", "minutesAwake", "minutesAfterWakeup", "timeInBed",
+                                                        "efficiency", "type", "infoCode", "logType",
+                                                        "mainSleep"]}
+
+        current_date = start_date
+        index = 0
+
+        while index < num_days:
+            json_filename = self.data_source.get_json_filename(
+                self.data_path + self.data_file, current_date, 30)
+            with self.data_source.open(json_filename) as f:
+                json_data = json.load(f)
+                last_json_date = None
+                for json_entry in reversed(json_data):
+                    json_date_str = json_entry['dateOfSleep']
+                    if index > 0 and json_date_str is None:
+                        return self.data
+
+                    json_date = datetime.strptime(
+                        json_date_str, '%Y-%m-%d').date()
+
+                    # Catch up to the current or start date
+                    if json_date < current_date:
+                        continue
+
+                    # Things get complicated here. We need to handle when there are multiple sleep entries in a day.
+                    # The index should only get incremented when the current date is different from the last date.
+                    while json_date > current_date:
+                        index += 1
+                        current_date += timedelta(days=1)
+                        if index == num_days:
+                            return self.data
+
+                    if json_date == current_date:
+                        # Check if the sleep entry is within the sleep time range
+                        parts = json_entry['startTime'].split('T')
+                        json_start_date = parts[0]
+                        json_start_time = parts[1]
+                        start_time = time.fromisoformat(json_start_time)
+
+                        parts = json_entry['endTime'].split('T')
+                        json_end_date = parts[0]
+                        json_end_time = parts[1]
+                        end_time = time.fromisoformat(json_end_time)
+
+                        if (json_start_date == json_end_date) and (start_time > self.wake_time) and (end_time < self.sleep_time):
+                            # Skip this sleep entry, it's not overnight
+                            # print(json_entry)
+                            print("Nap detected, skipping", json_start_date, json_start_time, json_end_time)
+                            continue
+
+                        if last_json_date != json_date_str:
+                            # For the first sleep, capture all details
+                            for key in self.data.keys():
+                                self.data[key][index] = json_entry.get(
+                                    key, None)
+                        else:
+                            # If the current date is the same as the last date, we need to update the endTime and minutesAwake
+                            # of the main sleep entry.
+                            # self.data[key][index]
+                            # print(json_entry)
+                            print("Non-main sleep detected, updating main sleep",json_start_date, json_start_time, json_end_time)
+                            # Increment the minutesAwake of the main sleep with the minutesAwake of the non-main sleep
+                            self.data["minutesAwake"][index] += json_entry.get("minutesAwake", 0)
+                            # Increment the minutesAwake of the main sleep with the minutes between the last endTime and the current startTime
+                            last_wake_time = datetime.strptime(self.data["endTime"][index], '%Y-%m-%dT%H:%M:%S.%f')
+                            this_sleep_time = datetime.strptime(json_entry.get("startTime", None), '%Y-%m-%dT%H:%M:%S.%f')
+                            delta_minutes = (this_sleep_time - last_wake_time).seconds // 60
+                            self.data["minutesAwake"][index] += delta_minutes
+                            # Update endTime to the current endTime
+                            self.data["endTime"][index] = json_entry.get(
+                                "endTime", None)
+
+                    elif json_date > current_date:
+                        # The current date has no sleep, skip and move to the next date
+                        print("No sleep data for", current_date)
+                        current_date += timedelta(days=1)
+
+                    last_json_date = json_date_str
+
+                # TODO: Handle missing data and errors
 
         return self.data
