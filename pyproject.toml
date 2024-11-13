@@ -64,6 +64,7 @@ exclude = [
     "tests",
     "data",
     "fitout/fitout_develop.py",
+    "requirements-github.txt",
 ]
 
 [tool.autopep8]
