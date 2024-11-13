@@ -374,10 +374,13 @@ class BasicSleepInfo(BaseImporter):
         end_date += timedelta(
             days=1)  # Include the end date, to get the last night's sleep.
         num_days = (end_date - start_date).days + 1
-        self.data = {key: [None] * num_days for key in ["dateOfSleep", "startTime", "endTime", "duration", "minutesToFallAsleep",
-                                                        "minutesAsleep", "minutesAwake", "minutesAfterWakeup", "timeInBed",
-                                                        "efficiency", "type", "infoCode", "logType",
-                                                        "mainSleep"]}
+        self.data_keys = ["dateOfSleep", "startTime", "endTime", "duration", "minutesToFallAsleep",
+                          "minutesAsleep", "minutesAwake", "minutesAfterWakeup", "timeInBed",
+                          "efficiency"]
+        self.data = {key: [None] * num_days for key in self.data_keys}
+        self.levels_summary_keys = ["deep", "wake", "light", "rem"]
+        for key in self.levels_summary_keys:
+            self.data[f"summary_{key}_mins"] = [None] * num_days
 
         current_date = start_date
         index = 0
@@ -432,15 +435,20 @@ class BasicSleepInfo(BaseImporter):
 
                         if last_json_date != json_date_str:
                             # For the first sleep, capture all details
-                            for key in self.data.keys():
+                            for key in self.data_keys:
                                 self.data[key][index] = json_entry.get(key, None)
+                            # Capture the summary levels
+                            for key in self.levels_summary_keys:
+                                summary = json_entry['levels']['summary']
+                                self.data[f"summary_{key}_mins"][index] = summary[key]['minutes']
+
                         else:
                             # If the current date is the same as the last date, we need to update the endTime and minutesAwake
                             # of the main sleep entry.
                             # self.data[key][index]
                             # log(json_entry)
                             log("Non-main sleep detected, updating main sleep",
-                                  json_start_date, json_start_time, json_end_time)
+                                json_start_date, json_start_time, json_end_time)
                             # Increment the minutesAwake of the main sleep with the minutesAwake of the non-main sleep
                             self.data["minutesAwake"][index] += json_entry.get("minutesAwake", 0)
                             # Increment the minutesAwake of the main sleep with the minutes between the last endTime and the current startTime
@@ -452,6 +460,12 @@ class BasicSleepInfo(BaseImporter):
                             # Update endTime to the current endTime
                             self.data["endTime"][index] = json_entry.get("endTime", None)
 
+                            # Increment the summary levels
+                            for key in self.levels_summary_keys:
+                                summary = json_entry['levels']['summary']
+                                if key in summary:
+                                    self.data[f"summary_{key}_mins"][index] += json_entry['levels']['summary'][key]['minutes']
+
                     elif json_date > current_date:
                         # The current date has no sleep, skip and move to the next date
                         log("No sleep data for", current_date)
@@ -462,6 +476,7 @@ class BasicSleepInfo(BaseImporter):
                 # TODO: Handle missing data and errors
 
         return self.data
+
 
 # TODO: Implement proper logging
 def log(*args):
