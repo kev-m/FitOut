@@ -152,6 +152,10 @@ if __name__ == "__main__":
     main()
 ```
 
+### More Examples
+
+For more examples, see the [examples](examples) directory.
+
 ## Contributing
 
 If you'd like to contribute to **pyFitOut**, follow the guidelines outlined in the [Contributing Guide](https://github.com/kev-m/pyFitOut/blob/development/CONTRIBUTING.md).
