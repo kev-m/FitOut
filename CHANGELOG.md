@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.0.6 (2024-11-13)
+
+#### Fixes
+
+* Implement changes to support basic sleep reporting
+* Trivial splitting functionality into files
+
+Full set of changes: [`v0.0.5...v0.0.6`](https://github.com/kev-m/pyFitOut/compare/v0.0.5...v0.0.6)
+
 ## v0.0.5 (2024-11-10)
 
 #### Fixes
