@@ -1,6 +1,12 @@
-# Regular imports from now on.
-import numpy as np
-import matplotlib.pyplot as plt
+# Example using fitout to extract basic sleep info and write out some data to a CSV file.
+#
+# Install fitout with:
+#   pip install fitout
+#
+# Run this script with:
+#   python sleep_to_csv.py
+
+
 from datetime import date, datetime
 import fitout as fo
 
@@ -21,8 +27,8 @@ def main():
     data_source = fo.NativeFileLoader(takeout_dir)
 
     # Specify the desired date range.
-    start_date = date(2024, 10, 1)
-    end_date = date(2024, 10, 31)
+    start_date = date(2023, 1, 1)
+    end_date = date(2024, 1, 1)
     bsi_importer = fo.BasicSleepInfo(data_source)
     bsi_data = bsi_importer.get_data(start_date, end_date)
 
