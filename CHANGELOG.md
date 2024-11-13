@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.0.7 (2024-11-13)
+
+#### Fixes
+
+* Add sleep summary data.
+
+Full set of changes: [`v0.0.6...v0.0.7`](https://github.com/kev-m/pyFitOut/compare/v0.0.6...v0.0.7)
+
 ## v0.0.6 (2024-11-13)
 
 #### Fixes
