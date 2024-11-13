@@ -387,7 +387,7 @@ class BasicSleepInfo(BaseImporter):
             json_filename = self.data_source.get_json_filename(self.data_path + self.data_file, current_date, 30)
             if json_filename == last_file:
                 # We've run out of data in the data files, return what we have
-                print("No more data for", current_date, json_filename)
+                log("No more data for", current_date, json_filename)
                 return self.data
             last_file = json_filename
             with self.data_source.open(json_filename) as f:
@@ -426,8 +426,8 @@ class BasicSleepInfo(BaseImporter):
 
                         if (json_start_date == json_end_date) and (start_time > self.wake_time) and (end_time < self.sleep_time):
                             # Skip this sleep entry, it's not overnight
-                            # print(json_entry)
-                            print("Nap detected, skipping", json_start_date, json_start_time, json_end_time)
+                            # log(json_entry)
+                            log("Nap detected, skipping", json_start_date, json_start_time, json_end_time)
                             continue
 
                         if last_json_date != json_date_str:
@@ -438,24 +438,23 @@ class BasicSleepInfo(BaseImporter):
                             # If the current date is the same as the last date, we need to update the endTime and minutesAwake
                             # of the main sleep entry.
                             # self.data[key][index]
-                            # print(json_entry)
-                            print("Non-main sleep detected, updating main sleep",
+                            # log(json_entry)
+                            log("Non-main sleep detected, updating main sleep",
                                   json_start_date, json_start_time, json_end_time)
                             # Increment the minutesAwake of the main sleep with the minutesAwake of the non-main sleep
                             self.data["minutesAwake"][index] += json_entry.get("minutesAwake", 0)
                             # Increment the minutesAwake of the main sleep with the minutes between the last endTime and the current startTime
                             last_wake_time = datetime.strptime(self.data["endTime"][index], '%Y-%m-%dT%H:%M:%S.%f')
-                            this_sleep_time = datetime.strptime(json_entry.get(
-                                "startTime", None), '%Y-%m-%dT%H:%M:%S.%f')
+                            this_sleep_time = datetime.strptime(json_entry.get("startTime", None),
+                                                                '%Y-%m-%dT%H:%M:%S.%f')
                             delta_minutes = (this_sleep_time - last_wake_time).seconds // 60
                             self.data["minutesAwake"][index] += delta_minutes
                             # Update endTime to the current endTime
-                            self.data["endTime"][index] = json_entry.get(
-                                "endTime", None)
+                            self.data["endTime"][index] = json_entry.get("endTime", None)
 
                     elif json_date > current_date:
                         # The current date has no sleep, skip and move to the next date
-                        print("No sleep data for", current_date)
+                        log("No sleep data for", current_date)
                         current_date += timedelta(days=1)
 
                     last_json_date = json_date_str
@@ -463,3 +462,8 @@ class BasicSleepInfo(BaseImporter):
                 # TODO: Handle missing data and errors
 
         return self.data
+
+# TODO: Implement proper logging
+def log(*args):
+    print(*args)
+    pass
