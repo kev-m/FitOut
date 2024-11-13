@@ -43,9 +43,24 @@ git push
 git push --tags
 ```
 
-## Building the Package
+## Make a GitHub Release
 
-The library is published using `flit` to build and publish the artifact.
+Go to the GitHub project administration page and [publish a release](https://github.com/kev-m/pyFitOut/releases/new) using the tag created, above.
+
+Update the `release` branch:
+```bash
+git checkout release
+git rebase development
+git push -f
+git checkout development
+```
+
+## Publishing the Package (Manual)
+
+**NOTE:** This project is set up on GitHub for automatic publishing during the GitHub release process (above).
+These instructions are for legacy purposes or manual publishing.
+
+The library can be published using `flit` to build and publish the artifact.
 
 **NOTE:** Ensure that PyPI configuration is set up correctly, e.g. that servers and authentication are defined in the `~/.pypirc` file.
 
@@ -57,15 +72,4 @@ Build and publish the library:
 ```bash
 $ flit build
 $ flit publish
-```
-## Make a GitHub Release
-
-Go to the GitHub project administration page and [publish a release](https://github.com/kev-m/pyFitOut/releases/new) using the tag created, above.
-
-Update the `release` branch:
-```bash
-git checkout release
-git rebase development
-git push
-git checkout development
 ```
