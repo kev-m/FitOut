@@ -51,9 +51,21 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - publish
+
     permissions:
       id-token: write
 
+    # Dedicated environments with protections for publishing are strongly recommended.
+    environment:
+      # Official release
+      # name: pypi
+      # OPTIONAL: uncomment and update to include your PyPI project URL in the deployment status:
+      # url: https://pypi.org/project/fitout/
+      #
+      # Test release
+      name: testpypi
+      url: https://test.pypi.org/project/fitout/
+      
     steps:
       - name: Retrieve release distributions
         uses: actions/download-artifact@v4
