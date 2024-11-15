@@ -363,18 +363,39 @@ class BasicSleepInfo(BaseImporter):
         This function parses the sleep data from the Fitbit Google Takeout data files and returns a partially processed
         result. At most one entry is created per day, even if there are multiple sleep entries in the data file.
 
-        When a sleep entry is not the main sleep, the endTime is updated, and the `minutesAwake` is added to the main sleep.
+        When a sleep entry is not the main sleep, the endTime is updated, the minutesAwake is incremented with the
+        time between the last endTime and the current startTime, and the following dictionary entries are 
+        incremented with the additional sleep values:
+            `minutesAwake`, `summary_deep_mins`, `summary_wake_mins`, `summary_light_mins`, `summary_rem_mins`.
+
+
 
         Args:
             start_date (datetime.date, optional): The start date for data retrieval. Defaults to 10 days ago.
             end_date (datetime.date, optional): The end date for data retrieval. Defaults to today's date.
         Returns:
-            dic (int): The overnight resting heart rate in the specified range.
+            dict: A dictionary containing the sleep data with the following structure:
+                {
+                'dateOfSleep': [list of dates (string)],
+                'startTime': [list of start times (string)],
+                'endTime': [list of end times (string)],
+                'minutesToFallAsleep': [list of minutes to fall asleep (int)],
+                'minutesAsleep': [list of minutes asleep (int)],
+                'minutesAwake': [list of minutes awake (int)],
+                'minutesAfterWakeup': [list of minutes after wakeup (int)],
+                'timeInBed': [list of time in bed (int)],
+                'efficiency': [list of efficiency (int)],
+                'summary_deep_mins': [list of deep sleep minutes (int)],
+                'summary_wake_mins': [list of wake minutes (int)],
+                'summary_light_mins': [list of light sleep minutes (int)],
+                'summary_rem_mins': [list of REM sleep minutes (int)]
+                }
+
         """
         end_date += timedelta(
             days=1)  # Include the end date, to get the last night's sleep.
         num_days = (end_date - start_date).days + 1
-        self.data_keys = ["dateOfSleep", "startTime", "endTime", "duration", "minutesToFallAsleep",
+        self.data_keys = ["dateOfSleep", "startTime", "endTime", "minutesToFallAsleep",
                           "minutesAsleep", "minutesAwake", "minutesAfterWakeup", "timeInBed",
                           "efficiency"]
         self.data = {key: [None] * num_days for key in self.data_keys}
@@ -440,7 +461,8 @@ class BasicSleepInfo(BaseImporter):
                             # Capture the summary levels
                             for key in self.levels_summary_keys:
                                 summary = json_entry['levels']['summary']
-                                self.data[f"summary_{key}_mins"][index] = summary[key]['minutes']
+                                if key in summary:
+                                    self.data[f"summary_{key}_mins"][index] = summary[key]['minutes']
 
                         else:
                             # If the current date is the same as the last date, we need to update the endTime and minutesAwake
@@ -451,6 +473,8 @@ class BasicSleepInfo(BaseImporter):
                                 json_start_date, json_start_time, json_end_time)
                             # Increment the minutesAwake of the main sleep with the minutesAwake of the non-main sleep
                             self.data["minutesAwake"][index] += json_entry.get("minutesAwake", 0)
+                            # Increment the minutesAwake of the main sleep with the minutesAwake of the non-main sleep
+                            self.data["timeInBed"][index] += json_entry.get("timeInBed", 0)
                             # Increment the minutesAwake of the main sleep with the minutes between the last endTime and the current startTime
                             last_wake_time = datetime.strptime(self.data["endTime"][index], '%Y-%m-%dT%H:%M:%S.%f')
                             this_sleep_time = datetime.strptime(json_entry.get("startTime", None),
