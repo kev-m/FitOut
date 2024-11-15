@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.0.8 (2024-11-15)
+
+#### Fixes
+
+* Documenting API and minor bugfixes.
+
+Full set of changes: [`v0.0.7...v0.0.8`](https://github.com/kev-m/pyFitOut/compare/v0.0.7...v0.0.8)
+
 ## v0.0.7 (2024-11-13)
 
 #### Fixes
