@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.0.9 (2024-11-16)
+
+#### Fixes
+
+* Adding ZIP-file support.
+
+Full set of changes: [`v0.0.8...v0.0.9`](https://github.com/kev-m/pyFitOut/compare/v0.0.8...v0.0.9)
+
 ## v0.0.8 (2024-11-15)
 
 #### Fixes
