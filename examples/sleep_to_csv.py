@@ -22,7 +22,7 @@ def mins_awake_to_xls_time(mins_awake):
 
 def main():
     # Specify the location where the Takeout zip files was extracted
-    takeout_dir = "C:\Dev\Fitbit\Google\Takeout"
+    takeout_dir = 'C:/Dev/Fitbit/Google/'
     # Use the NativeFileLoader to load the data from the extracted files
     data_source = fo.NativeFileLoader(takeout_dir)
 

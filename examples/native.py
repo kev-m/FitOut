@@ -8,7 +8,7 @@ from datetime import date
 import fitout as fo
 
 # Specify the location where the Takeout zip files was extracted
-takeout_dir = "C:\Dev\Fitbit\Google\Takeout"
+takeout_dir = 'C:/Dev/Fitbit/Google/'
 # Use the NativeFileLoader to load the data from the extracted files
 data_source = fo.NativeFileLoader(takeout_dir)
 
