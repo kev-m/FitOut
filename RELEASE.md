@@ -26,7 +26,7 @@ Load the `docs/build/html/index.html`.
 
 **pyFitOut** uses semantic versioning. Update the version number in [pyFitOut/fitout/__init__.py](pyFitOut/fitout/__init__.py) according to changes since the previous tag.
 
-Create a tag with only the current number, e.g. `v0.0.9`.
+Create a tag with the current version, e.g. `v0.0.9`.
 ```bash
 git tag v0.0.9
 ```
