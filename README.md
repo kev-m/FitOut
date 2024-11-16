@@ -154,7 +154,7 @@ if __name__ == "__main__":
 
 ### More Examples
 
-For more examples, see the [examples](examples) directory.
+For more examples, see the [examples](https://github.com/kev-m/pyFitOut/tree/development/examples) directory.
 
 ## Contributing
 
