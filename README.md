@@ -27,7 +27,7 @@ Export your [FitBit data](https://www.fitbit.com/settings/data/export), using [G
 
 **Note:** Currently only export to zip is supported, and the zip files must be extracted to your local drive.
 
-Once the export is complete, download the zip file and extract it. I use `C:\Dev\Fitbit\Google\Takeout`. 
+Once the export is complete, download the zip file and extract it. I use `C:/Dev/Fitbit/Google/`. 
 This directory is the `takeout_dir`.
 
 ### Trivial Example
@@ -37,7 +37,7 @@ from datetime import date
 
 def main():
     # Specify the location where the Takeout zip files was extracted
-    takeout_dir = "C:\Dev\Fitbit\Google\Takeout"
+    takeout_dir = 'C:/Dev/Fitbit/Google/'
     # Use the NativeFileLoader to load the data from the extracted files
     data_source = fo.NativeFileLoader(takeout_dir)
 
@@ -78,7 +78,7 @@ import fitout as fo
 
 def main():
     # Specify the location where the Takeout zip files was extracted
-    takeout_dir = "C:\Dev\Fitbit\Google\Takeout"
+    takeout_dir = 'C:/Dev/Fitbit/Google/'
     # Use the NativeFileLoader to load the data from the extracted files
     data_source = fo.NativeFileLoader(takeout_dir)
 
