@@ -174,7 +174,7 @@ class BreathingRate(TwoLineCSVImporter):
         """
         # C:\Dev\Fitbit\Google\Takeout\Fitbit\Heart Rate Variability\Daily Respiratory Rate Summary - 2024-07-22.csv
         super().__init__(data_source,
-                         '/Fitbit/Heart Rate Variability/Daily Respiratory Rate Summary - ', precision)
+                         'Takeout/Fitbit/Heart Rate Variability/Daily Respiratory Rate Summary - ', precision)
         self.data = {}
 
     def _get_dailydata_filename(self, current_date):
@@ -220,7 +220,7 @@ class HeartRateVariability(TwoLineCSVImporter):
         # timestamp,rmssd,nremhr,entropy
         # 2024-07-21T00:00:00,29.232,49.623,2.472
         super().__init__(data_source,
-                         '/Fitbit/Heart Rate Variability/Daily Heart Rate Variability Summary - ')
+                         'Takeout/Fitbit/Heart Rate Variability/Daily Heart Rate Variability Summary - ')
 
     def _get_dailydata_filename(self, current_date):
         """
@@ -265,7 +265,7 @@ class RestingHeartRate(BaseImporter):
         # },
         # ...
         #
-        super().__init__(data_source, '/Fitbit/Global Export Data/', precision)
+        super().__init__(data_source, 'Takeout/Fitbit/Global Export Data/', precision)
         self.data_file = 'resting_heart_rate-'
 
     def get_data(self, start_date=days_ago(10), end_date=todays_date()):
@@ -284,7 +284,7 @@ class RestingHeartRate(BaseImporter):
         index = 0
 
         while index < num_days:
-            json_filename = self.data_source.get_json_filename(
+            json_filename = self.data_source._get_json_filename(
                 self.data_path + self.data_file, current_date)
             with self.data_source.open(json_filename) as f:
                 json_data = json.load(f)
@@ -351,7 +351,7 @@ class BasicSleepInfo(BaseImporter):
         # },{
         #   .....
         #
-        super().__init__(data_source, '/Fitbit/Global Export Data/', precision)
+        super().__init__(data_source, 'Takeout/Fitbit/Global Export Data/', precision)
         self.data_file = 'sleep-'
         self.sleep_time = sleep_time
         self.wake_time = wake_time
@@ -408,7 +408,7 @@ class BasicSleepInfo(BaseImporter):
         last_file = None
 
         while index < num_days:
-            json_filename = self.data_source.get_json_filename(self.data_path + self.data_file, current_date, 30)
+            json_filename = self.data_source._get_json_filename(self.data_path + self.data_file, current_date, 30)
             if json_filename == last_file:
                 # We've run out of data in the data files, return what we have
                 log("No more data for", current_date, json_filename)
