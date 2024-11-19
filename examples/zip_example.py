@@ -1,10 +1,10 @@
-# Example using fitout to extract basic sleep info and write out some data to a CSV file.
+# Example using fitout to extract work with Takeout zip files.
 #
 # Install fitout with:
 #   pip install fitout
 #
 # Run this script with:
-#   python sleep_to_csv.py
+#   python zip_example.py
 
 
 from datetime import date, datetime

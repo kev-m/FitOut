@@ -5,4 +5,6 @@ __version__ = "v0.0.9"  # fix: Adding ZIP-file support.
 
 from .helpers import *
 from .datasources import *
-from .importers import *
+from importers.breathing_rate import *
+from importers.heart_rate import *
+from importers.sleep import *
