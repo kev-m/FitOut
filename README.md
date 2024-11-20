@@ -70,6 +70,11 @@ if __name__ == "__main__":
 ```
 
 ### Plotting Example with Numpy and Matplotlib
+**Note:** To run this example, you will need to install the dependencies:
+```bash
+pip install matplotlib numpy
+```
+
 ```python
 from datetime import date
 import numpy as np
