@@ -108,14 +108,17 @@ class RestingHeartRate(BaseImporter):
                 json_date = json_entry['value']['date']
                 if index > 0 and json_date is None:
                     # We've run out of data in the data file, return what we have
-                    return self.data
-                json_value = json_entry['value']['value']
-                if json_date == current_date.strftime('%m/%d/%y'):
-                    self.data[index] = number_precision(
-                        json_value, self.precision)
-                    self.dates[index] = current_date
+                    # return self.data
                     index += 1
                     current_date += timedelta(days=1)
+                if json_date is not None:
+                    json_value = json_entry['value']['value']
+                    if json_date == current_date.strftime('%m/%d/%y'):
+                        self.data[index] = number_precision(
+                            json_value, self.precision)
+                        self.dates[index] = current_date
+                        index += 1
+                        current_date += timedelta(days=1)
                 if index == num_days:
                     break
             # TODO: Handle missing data and errors
