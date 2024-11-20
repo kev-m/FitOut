@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.0.10 (2024-11-20)
+
+#### Fixes
+
+* Handling missing data at the end of the list.
+* Handle gaps in the resting heart rate data.
+* Fixing runtime error in the plotting example.
+* Fixing Takeout URLs, compatible with the ZIP file handler.
+* Fixing Takeout URLs, compatible with the ZIP file handler.
+
+Full set of changes: [`v0.0.9...v0.0.10`](https://github.com/kev-m/pyFitOut/compare/v0.0.9...v0.0.10)
+
 ## v0.0.9 (2024-11-16)
 
 #### Fixes
