@@ -70,11 +70,18 @@ def fill_missing_with_neighbours(data_list):
     Returns:
         list: A list with missing values replaced by the average of the neighbouring values.
     """
-    for i in range(1, len(data_list) - 1):
+    list_len = len(data_list)
+    for i in range(1, list_len - 1):
         if data_list[i] is None:
-            if i > 0 and i < len(data_list) - 1:
+            if i > 0 and i < list_len - 1:
                 # Replace with average of neighbours, if they exist
-                data_list[i] = (data_list[i - 1] + data_list[i + 1])/2.
+                j = i + 1
+                while j < list_len and data_list[j] is None:
+                    j += 1
+                if j < list_len:
+                    data_list[i] = (data_list[i - 1] + data_list[j]) / 2.
+                else:
+                    data_list[i] = data_list[i - 1]
             elif i == 0:
                 # Replace with next value, if at the beginning
                 data_list[i] = data_list[i + 1]
@@ -94,9 +101,13 @@ def fix_invalid_data_points(data_list, min_value, max_value):
     Returns:
         list: A list with dubious values replaced by the average of the neighbouring values.
     """
-    for i in range(1, len(data_list) - 1):
+    list_len = len(data_list)
+    for i in range(1, list_len - 1):
         if data_list[i] < min_value or data_list[i] > max_value:
-            if i > 0 and i < len(data_list) - 1:
+            if i > 0 and i < list_len - 1:
+                # DEBUG: Catch the None values.
+                if data_list[i - 1] is None or data_list[i + 1] is None:
+                    print(f"None value at index {i + 1}")
                 # Replace with average of neighbours, if they exist
                 data_list[i] = (data_list[i - 1] + data_list[i + 1])/2.
             elif i == 0:
