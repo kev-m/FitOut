@@ -83,10 +83,8 @@ def main():
     data_source = fo.NativeFileLoader(takeout_dir)
 
     # Specify the desired date range.
-    start_date = date(2023, 1, 1)
-    end_date = date(2023, 12, 31)
-    # start_date = date(2024, 7, 1)
-    # end_date = date(2024, 7, 31)
+    start_date = date(2024, 10, 1)
+    end_date = date(2024, 10, 31)
 
     # Generate a list of dates for the date range, for informational or plotting purposes.
     dates = fo.dates_array(start_date, end_date)
