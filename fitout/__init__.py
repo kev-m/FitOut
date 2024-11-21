@@ -1,6 +1,6 @@
 """A Python library to extract FitBit Google Takeout data."""
 # Semantic Versioning according to https://semver.org/spec/v2.0.0.html
-__version__ = "v0.0.10"  # fix: Handling missing data.
+__version__ = "v0.1.0"  # feature: Adding basic heart rate importer.
 
 
 from .helpers import *

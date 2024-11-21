@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.1.0 (2024-11-21)
+
+#### New Features
+
+* Added basic support for heart rate reporting.
+
+Full set of changes: [`v0.0.10...v0.1.0`](https://github.com/kev-m/pyFitOut/compare/v0.0.10...v0.1.0)
+
 ## v0.0.10 (2024-11-20)
 
 #### Fixes
