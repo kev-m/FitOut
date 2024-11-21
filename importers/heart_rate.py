@@ -1,6 +1,6 @@
 """Implementations of Heart Rate Importers."""
 
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, date
 import json
 
 from importers.base import BaseImporter, BasicCSVImporter, TwoLineCSVImporter
@@ -179,10 +179,25 @@ class BasicHeartRate(BasicCSVImporter):
         Returns:
             list (int): The regularised heart rate in the specified range.
         """
-        num_samples = int((end_time - start_time).seconds/self.interval_s) + 1
+
+        if isinstance(start_time, datetime):
+            current_time = start_time
+        elif isinstance(start_time, date):
+            current_time = datetime.combine(start_time, datetime.min.time())
+        else:
+            raise ValueError('start_time must be a datetime or date object')
+
+        if isinstance(end_time, datetime):
+            pass
+        elif isinstance(end_time, date):
+            end_time = datetime.combine(end_time, datetime.max.time())
+        else:
+            raise ValueError('end_time must be a datetime or date object')
+
+        num_samples = int((end_time - current_time).total_seconds() / self.interval_s) + 1
         self.data = [None] * num_samples
         self.dates = [None] * num_samples
-        current_time = start_time
+
         index = 0
 
         while index < num_samples:
@@ -197,14 +212,14 @@ class BasicHeartRate(BasicCSVImporter):
                 # convert string to datetime
                 data_time = datetime.strptime(row[0], '%Y-%m-%dT%H:%M:%SZ')
                 current_rate = float(row[1])
-                if data_time >= current_time:
+                while current_time <= data_time:
                     # 4. For all values from that point on, calculate the heart rate by interpolation, using the sampling interval.
                     if data_time == current_time:
                         self.data[index] = number_precision(current_rate, self.precision)
                     else:
                         # interpolate between the two values
                         data_time_diff = (data_time - prev_data_time).seconds
-                        sample_time_diff = (current_time - prev_data_time).seconds
+                        sample_time_diff = current_time.timestamp() - prev_data_time.timestamp()
 
                         heart_rate_diff = current_rate - prev_data_rate
                         m = heart_rate_diff/data_time_diff
