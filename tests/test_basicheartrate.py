@@ -1,6 +1,7 @@
-from datetime import datetime
 import pytest
 from unittest.mock import MagicMock
+
+from datetime import datetime
 
 from fitout import BasicHeartRate
 
