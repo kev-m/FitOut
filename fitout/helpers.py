@@ -1,6 +1,6 @@
 """Various helpers to assist in the use of fitout."""
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 
 # Date helpers
@@ -39,6 +39,19 @@ def dates_array(start_date, end_date):
         list: A list of dates from start_date to end_date.
     """
     return [start_date + timedelta(days=i) for i in range((end_date - start_date).days + 1)]
+
+
+def hours_ago(n):
+    """
+    Calculate the date and time that is 'n' hours before now.
+
+    Args:
+        n (int): The number of hours to subtract from the current date and time.
+
+    Returns:
+        datetime.datetime: The date and time 'n' hours before now.
+    """
+    return datetime.now() - timedelta(hours=n)
 
 
 # Data helpers
