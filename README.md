@@ -1,15 +1,15 @@
-# pyFitOut
-[![GitHub license](https://img.shields.io/github/license/kev-m/pyFitOut)](https://github.com/kev-m/pyFitOut/blob/development/LICENSE.txt)
+# FitOut
+[![GitHub license](https://img.shields.io/github/license/kev-m/FitOut)](https://github.com/kev-m/FitOut/blob/development/LICENSE.txt)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/fitout?logo=pypi)](https://pypi.org/project/fitout/)
 [![semver](https://img.shields.io/badge/semver-2.0.0-blue)](https://semver.org/)
-[![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/kev-m/pyFitOut?sort=semver)](https://github.com/kev-m/pyFitOut/releases)
+[![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/kev-m/FitOut?sort=semver)](https://github.com/kev-m/FitOut/releases)
 [![Code style: autopep8](https://img.shields.io/badge/code%20style-autopep8-000000.svg)](https://pypi.org/project/autopep8/)
 
-<!-- ![pyFitOut logo](https://github.com/kev-m/pyFitOut/blob/development/docs/source/figures/Logo_small.png) -->
+<!-- ![FitOut logo](https://github.com/kev-m/FitOut/blob/development/docs/source/figures/Logo_small.png) -->
 
-The **pyFitOut** project is an open source Python library for extracting FitBit data from Google Takeout.
+The **FitOut** project is an open source Python library for extracting FitBit data from Google Takeout.
 
-<!-- For detailed documentation, refer to the [pyFitOut Documentation](https://pyFitOut.readthedocs.io/). -->
+<!-- For detailed documentation, refer to the [FitOut Documentation](https://FitOut.readthedocs.io/). -->
 
 ## Installation
 
@@ -20,7 +20,7 @@ pip install fitout
 
 ## Example
 
-How to use pyFitOut:
+How to use FitOut:
 
 ### Export
 Export your [FitBit data](https://www.fitbit.com/settings/data/export), using [Google Takeout](https://takeout.google.com/settings/takeout/custom/fitbit?pli=1).
@@ -156,21 +156,21 @@ if __name__ == "__main__":
 
 ### More Examples
 
-For more examples, see the [examples](https://github.com/kev-m/pyFitOut/tree/development/examples) directory.
+For more examples, see the [examples](https://github.com/kev-m/FitOut/tree/development/examples) directory.
 
 ## Contributing
 
-If you'd like to contribute to **pyFitOut**, follow the guidelines outlined in the [Contributing Guide](https://github.com/kev-m/pyFitOut/blob/development/CONTRIBUTING.md).
+If you'd like to contribute to **FitOut**, follow the guidelines outlined in the [Contributing Guide](https://github.com/kev-m/FitOut/blob/development/CONTRIBUTING.md).
 
 ## License
 
-See [`LICENSE.txt`](https://github.com/kev-m/pyFitOut/blob/development/LICENSE.txt) for more information.
+See [`LICENSE.txt`](https://github.com/kev-m/FitOut/blob/development/LICENSE.txt) for more information.
 
 ## Contact
 
-For inquiries and discussion, use [pyFitOut Discussions](https://github.com/kev-m/pyFitOut/discussions).
+For inquiries and discussion, use [FitOut Discussions](https://github.com/kev-m/FitOut/discussions).
 
 ## Issues
 
-For issues related to this Python implementation, visit the [Issues](https://github.com/kev-m/pyFitOut/issues) page.
+For issues related to this Python implementation, visit the [Issues](https://github.com/kev-m/FitOut/issues) page.
 

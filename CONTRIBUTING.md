@@ -1,6 +1,6 @@
-# Contributing to pyFitOut
+# Contributing to FitOut
 
-Thank you for considering contributing to pyFitOut! We welcome your contributions to help make this project even better. Before you get started, take a moment to review the following guidelines.
+Thank you for considering contributing to FitOut! We welcome your contributions to help make this project even better. Before you get started, take a moment to review the following guidelines.
 
 ## Getting Started
 
@@ -37,7 +37,7 @@ Read and adhere to our [Code of Conduct](CODE_OF_CONDUCT.md). Treat all contribu
 
 By contributing, you agree that your contributions will be licensed under the [LICENSE.txt](LICENSE.txt) file.
 
-We appreciate your interest in contributing to pyFitOut and look forward to working with you!
+We appreciate your interest in contributing to FitOut and look forward to working with you!
 
 ## Setting Up the Development Environment
 
@@ -46,7 +46,7 @@ We appreciate your interest in contributing to pyFitOut and look forward to work
 You can clone the project from GitHub using the following command:
 
 ```bash
-git clone https://github.com/kev-m/pyFitOut
+git clone https://github.com/kev-m/FitOut
 ```
 
 ### Installing Dependencies
@@ -54,12 +54,12 @@ git clone https://github.com/kev-m/pyFitOut
 Once you have cloned the repository, navigate to the project directory and install the required dependencies using `pip`. It's recommended to use a virtual environment to manage dependencies.
 
 ```bash
-cd pyFitOut
+cd FitOut
 pip install -r requirements.txt
 pip install -r requirements-dev.txt
 ```
 
-The `requirements.txt` file contains the main dependencies, while `requirements-dev.txt` includes additional packages for development and testing. These commands will ensure you have the necessary environment set up for contributing to pyFitOut.
+The `requirements.txt` file contains the main dependencies, while `requirements-dev.txt` includes additional packages for development and testing. These commands will ensure you have the necessary environment set up for contributing to FitOut.
 
 ## SciPiy and Dependencies
 
@@ -144,4 +144,4 @@ Refs: #123
 
 ## Project Release Procedure
 
-The **pyFitOut** release procedure is documented in the [Release Procedure](./RELEASE.md).
+The **FitOut** release procedure is documented in the [Release Procedure](./RELEASE.md).

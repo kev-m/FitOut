@@ -1,5 +1,5 @@
 # Release Procedure
-The basic procedure for releasing a new version of **pyFitOut** consists of:
+The basic procedure for releasing a new version of **FitOut** consists of:
 - Running the unit tests.
 - Checking the documentation
 - Create a tag and update the change log
@@ -24,7 +24,7 @@ Load the `docs/build/html/index.html`.
 
 ## Create a Tag
 
-**pyFitOut** uses semantic versioning. Update the version number in [pyFitOut/fitout/__init__.py](pyFitOut/fitout/__init__.py) according to changes since the previous tag.
+**FitOut** uses semantic versioning. Update the version number in [FitOut/fitout/__init__.py](FitOut/fitout/__init__.py) according to changes since the previous tag.
 
 Create a tag with the current version, e.g. `v0.0.9`.
 ```bash
@@ -33,7 +33,7 @@ git tag v0.0.9
 
 ## Update the ChangeLog
 
-**pyFitOut** uses `auto-changelog` to parse git commit messages and generate the `CHANGELOG.md`.
+**FitOut** uses `auto-changelog` to parse git commit messages and generate the `CHANGELOG.md`.
 
 ```bash
 auto-changelog --tag-prefix v
@@ -45,7 +45,7 @@ git push --tags
 
 ## Make a GitHub Release
 
-Go to the GitHub project administration page and [publish a release](https://github.com/kev-m/pyFitOut/releases/new) using the tag created, above.
+Go to the GitHub project administration page and [publish a release](https://github.com/kev-m/FitOut/releases/new) using the tag created, above.
 
 Update the `release` branch:
 ```bash

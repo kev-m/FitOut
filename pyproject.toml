@@ -30,12 +30,12 @@ keywords = [
 dynamic = ["version", "description"]
 
 [project.urls]
-Home = "https://github.com/kev-m/pyFitOut"
-Source = "https://github.com/kev-m/pyFitOut"
-"Code of Conduct" = "https://github.com/kev-m/pyFitOut/blob/release/CODE_OF_CONDUCT.md"
-"Bug tracker" = "https://github.com/kev-m/pyFitOut/issues"
-Changelog = "https://github.com/kev-m/pyFitOut/blob/release/CHANGELOG.md"
-Contributing = "https://github.com/kev-m/pyFitOut/blob/release/CONTRIBUTING.md"
+Home = "https://github.com/kev-m/FitOut"
+Source = "https://github.com/kev-m/FitOut"
+"Code of Conduct" = "https://github.com/kev-m/FitOut/blob/release/CODE_OF_CONDUCT.md"
+"Bug tracker" = "https://github.com/kev-m/FitOut/issues"
+Changelog = "https://github.com/kev-m/FitOut/blob/release/CHANGELOG.md"
+Contributing = "https://github.com/kev-m/FitOut/blob/release/CONTRIBUTING.md"
 
 #[project.dependencies]
 # List of dependencies required to run the project

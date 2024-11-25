@@ -6,7 +6,7 @@
 
 * Added basic support for heart rate reporting.
 
-Full set of changes: [`v0.0.10...v0.1.0`](https://github.com/kev-m/pyFitOut/compare/v0.0.10...v0.1.0)
+Full set of changes: [`v0.0.10...v0.1.0`](https://github.com/kev-m/FitOut/compare/v0.0.10...v0.1.0)
 
 ## v0.0.10 (2024-11-20)
 
@@ -18,7 +18,7 @@ Full set of changes: [`v0.0.10...v0.1.0`](https://github.com/kev-m/pyFitOut/comp
 * Fixing Takeout URLs, compatible with the ZIP file handler.
 * Fixing Takeout URLs, compatible with the ZIP file handler.
 
-Full set of changes: [`v0.0.9...v0.0.10`](https://github.com/kev-m/pyFitOut/compare/v0.0.9...v0.0.10)
+Full set of changes: [`v0.0.9...v0.0.10`](https://github.com/kev-m/FitOut/compare/v0.0.9...v0.0.10)
 
 ## v0.0.9 (2024-11-16)
 
@@ -26,7 +26,7 @@ Full set of changes: [`v0.0.9...v0.0.10`](https://github.com/kev-m/pyFitOut/comp
 
 * Adding ZIP-file support.
 
-Full set of changes: [`v0.0.8...v0.0.9`](https://github.com/kev-m/pyFitOut/compare/v0.0.8...v0.0.9)
+Full set of changes: [`v0.0.8...v0.0.9`](https://github.com/kev-m/FitOut/compare/v0.0.8...v0.0.9)
 
 ## v0.0.8 (2024-11-15)
 
@@ -34,7 +34,7 @@ Full set of changes: [`v0.0.8...v0.0.9`](https://github.com/kev-m/pyFitOut/compa
 
 * Documenting API and minor bugfixes.
 
-Full set of changes: [`v0.0.7...v0.0.8`](https://github.com/kev-m/pyFitOut/compare/v0.0.7...v0.0.8)
+Full set of changes: [`v0.0.7...v0.0.8`](https://github.com/kev-m/FitOut/compare/v0.0.7...v0.0.8)
 
 ## v0.0.7 (2024-11-13)
 
@@ -42,7 +42,7 @@ Full set of changes: [`v0.0.7...v0.0.8`](https://github.com/kev-m/pyFitOut/compa
 
 * Add sleep summary data.
 
-Full set of changes: [`v0.0.6...v0.0.7`](https://github.com/kev-m/pyFitOut/compare/v0.0.6...v0.0.7)
+Full set of changes: [`v0.0.6...v0.0.7`](https://github.com/kev-m/FitOut/compare/v0.0.6...v0.0.7)
 
 ## v0.0.6 (2024-11-13)
 
@@ -51,7 +51,7 @@ Full set of changes: [`v0.0.6...v0.0.7`](https://github.com/kev-m/pyFitOut/compa
 * Implement changes to support basic sleep reporting
 * Trivial splitting functionality into files
 
-Full set of changes: [`v0.0.5...v0.0.6`](https://github.com/kev-m/pyFitOut/compare/v0.0.5...v0.0.6)
+Full set of changes: [`v0.0.5...v0.0.6`](https://github.com/kev-m/FitOut/compare/v0.0.5...v0.0.6)
 
 ## v0.0.5 (2024-11-10)
 
@@ -59,7 +59,7 @@ Full set of changes: [`v0.0.5...v0.0.6`](https://github.com/kev-m/pyFitOut/compa
 
 * Adding some data cleanup routines.
 
-Full set of changes: [`v0.0.4...v0.0.5`](https://github.com/kev-m/pyFitOut/compare/v0.0.4...v0.0.5)
+Full set of changes: [`v0.0.4...v0.0.5`](https://github.com/kev-m/FitOut/compare/v0.0.4...v0.0.5)
 
 ## v0.0.4 (2024-11-10)
 
@@ -67,7 +67,7 @@ Full set of changes: [`v0.0.4...v0.0.5`](https://github.com/kev-m/pyFitOut/compa
 
 * Improving detectin of JSON files for resting heart rate.
 
-Full set of changes: [`v0.0.3...v0.0.4`](https://github.com/kev-m/pyFitOut/compare/v0.0.3...v0.0.4)
+Full set of changes: [`v0.0.3...v0.0.4`](https://github.com/kev-m/FitOut/compare/v0.0.3...v0.0.4)
 
 ## v0.0.3 (2024-11-09)
 
@@ -75,7 +75,7 @@ Full set of changes: [`v0.0.3...v0.0.4`](https://github.com/kev-m/pyFitOut/compa
 
 * Various bug fixes
 
-Full set of changes: [`v0.0.2...v0.0.3`](https://github.com/kev-m/pyFitOut/compare/v0.0.2...v0.0.3)
+Full set of changes: [`v0.0.2...v0.0.3`](https://github.com/kev-m/FitOut/compare/v0.0.2...v0.0.3)
 
 ## v0.0.2 (2024-11-09)
 
@@ -83,7 +83,7 @@ Full set of changes: [`v0.0.2...v0.0.3`](https://github.com/kev-m/pyFitOut/compa
 
 * Fixing instructions.
 
-Full set of changes: [`v0.0.1...v0.0.2`](https://github.com/kev-m/pyFitOut/compare/v0.0.1...v0.0.2)
+Full set of changes: [`v0.0.1...v0.0.2`](https://github.com/kev-m/FitOut/compare/v0.0.1...v0.0.2)
 
 ## v0.0.1 (2024-11-09)
 
