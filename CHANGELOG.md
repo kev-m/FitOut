@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.1.1 (2024-11-25)
+
+#### Fixes
+
+* Fixed bug with importers directory being in the wrong location.
+
+Full set of changes: [`v0.1.0...v0.1.1`](https://github.com/kev-m/FitOut/compare/v0.1.0...v0.1.1)
+
 ## v0.1.0 (2024-11-21)
 
 #### New Features
