@@ -1,6 +1,6 @@
 """Implementations of Breathing Rate Imports."""
 
-from importers.base import TwoLineCSVImporter
+from fitout.importers.base import TwoLineCSVImporter
 
 # Importer for overnight breathing rate data
 class BreathingRate(TwoLineCSVImporter):

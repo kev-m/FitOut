@@ -3,7 +3,7 @@
 from datetime import timedelta, time, datetime
 import json
 
-from importers.base import BaseImporter
+from fitout.importers.base import BaseImporter
 from fitout.helpers import days_ago, todays_date
 
 
