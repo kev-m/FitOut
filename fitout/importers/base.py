@@ -49,6 +49,27 @@ class BaseImporter:
         """
         pass
 
+    def get_raw_sessions(self, start_date=days_ago(10), end_date=todays_date()):
+        """
+        Retrieves raw, unaggregated, or event-based data sessions for a range of dates.
+        
+        Unlike `get_data`, which typically returns fixed arrays mapping values to individual days
+        or normalized interpolations, this method is intended for returning distinct recorded 
+        events (such as multiple naps in a day, individual workouts, etc.) exactly as they exist 
+        in the origin data source.
+
+        This abstract method can be implemented by subclasses where applicable.
+
+        Args:
+            start_date (datetime.date): The start date for data retrieval.
+            end_date (datetime.date): The end date for data retrieval.
+
+        Raises:
+            NotImplementedError: If the subclass does not implement raw session extraction.
+        """
+        raise NotImplementedError(f"{self.__class__.__name__} does not support raw session extraction.")
+
+
 
 # Base CSV reader
 class BasicCSVImporter(BaseImporter):
