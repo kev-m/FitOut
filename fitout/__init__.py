@@ -1,6 +1,6 @@
 """A Python library to extract FitBit Google Takeout data."""
 # Semantic Versioning according to https://semver.org/spec/v2.0.0.html
-__version__ = "v0.1.1"  # fix: Fixed bug in project layout: importers was in the wrong location.
+__version__ = "v0.2.0"  # feat: Added get_raw_sessions to base importer interface
 
 
 from .helpers import *
