@@ -201,6 +201,66 @@ class BasicSleepInfo(BaseImporter):
 
         return self.data
 
+    def get_raw_sessions(self, start_date=days_ago(10), end_date=todays_date()):
+        """
+        Retrieves all raw sleep events for a range of dates from start_date to end_date.
+
+        Unlike `get_data`, this includes naps and non-main sleep events without merging 
+        them into a single daily record. Each event corresponds to a distinct sleep session.
+
+        Args:
+            start_date (datetime.date, optional): The start date for data retrieval. Defaults to 10 days ago.
+            end_date (datetime.date, optional): The end date for data retrieval. Defaults to today's date.
+            
+        Returns:
+            list[dict]: A list of dictionaries, where each dictionary represents a distinct sleep session.
+                The keys encompass all native json sleep attributes as well as flattened summary level minutes:
+                'summary_deep_mins', 'summary_wake_mins', 'summary_light_mins', 'summary_rem_mins'.
+        """
+        end_date += timedelta(days=1)  # Include the end date, to get the last night's sleep.
+        current_date = start_date
+        last_file = None
+        raw_sessions = []
+        
+        while current_date <= end_date:
+            json_filename = self.data_source._get_json_filename(self.data_path + self.data_file, current_date, 30)
+            
+            # If the filename hasn't changed, we just advance the date.
+            # If we get the identical filename again, the file was either read already or didn't exist.
+            if json_filename and json_filename != last_file:
+                last_file = json_filename
+                try:
+                    with self.data_source.open(json_filename) as f:
+                        json_data = json.load(f)
+                        # The json_data is usually in reverse chronological order
+                        for json_entry in reversed(json_data):
+                            json_date_str = json_entry.get('dateOfSleep')
+                            if not json_date_str:
+                                continue
+                            
+                            json_date = datetime.strptime(json_date_str, '%Y-%m-%d').date()
+                            
+                            if start_date <= json_date <= end_date:
+                                # Process summary levels 
+                                levels_summary_keys = ["deep", "wake", "light", "rem"]
+                                for key in levels_summary_keys:
+                                    json_entry[f"summary_{key}_mins"] = None
+                                    
+                                if 'levels' in json_entry and 'summary' in json_entry['levels']:
+                                    summary = json_entry['levels']['summary']
+                                    for key in levels_summary_keys:
+                                        if key in summary:
+                                            json_entry[f"summary_{key}_mins"] = summary[key].get('minutes')
+                                            
+                                raw_sessions.append(json_entry)
+                except Exception as e:
+                    log(f"Could not open/parse {json_filename}: {e}")
+            
+            # Move to the next day to ensure we eventually cross the boundaries into the next month's file
+            current_date += timedelta(days=1)
+            
+        return raw_sessions
+
 
 # TODO: Implement proper logging
 def log(*args):
