@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.2.0 (2026-03-20)
+
+#### New Features
+
+* (heartrate): Caching files to speed up reading of heart-rate data.
+* (core): add get_raw_sessions to BaseImporter as abstract method
+* (sleep): add get_raw_sessions to extract all sleep events including naps
+#### Fixes
+
+* (doc): Updating documentation to reflect using ZIP files directly.
+
+Full set of changes: [`v0.1.1...v0.2.0`](https://github.com/kev-m/FitOut/compare/v0.1.1...v0.2.0)
+
 ## v0.1.1 (2024-11-25)
 
 #### Fixes
