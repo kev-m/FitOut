@@ -201,40 +201,81 @@ class BasicHeartRate(BasicCSVImporter):
         index = 0
 
         while index < num_samples:
-            # start_date = current_date.date().strftime('%Y-%m-%d')
             # 1. Get the CSV file name from the start date
             start_date = current_time.date().strftime('%Y-%m-%d')
             csv_filename = self.data_path + self.data_file + start_date + '.csv'
-            # 2. Open the CSV file using the read_csv method
-            cols, data = self.read_csv(csv_filename)
-            # 3. Scan through the data to find the first entry that is equal to or after the start time
-            for row in data:
-                # convert string to datetime
-                data_time = datetime.strptime(row[0], '%Y-%m-%dT%H:%M:%SZ')
-                current_rate = float(row[1])
+            
+            # Use cached file data to avoid reading the same O(N) file N times
+            if not hasattr(self, '_cached_file') or self._cached_file != csv_filename:
+                try:
+                    cols, data = self.read_csv(csv_filename)
+                    # Pre-parse the datetime and float to avoid O(N) strptime calls in the hot loop
+                    self._cached_data = [
+                        (datetime.strptime(row[0], '%Y-%m-%dT%H:%M:%SZ'), float(row[1])) 
+                        for row in data
+                    ]
+                except FileNotFoundError:
+                    # Move to next day if not found
+                    current_time = datetime.combine(current_time.date() + timedelta(days=1), datetime.min.time())
+                    # Make sure we don't accidentally skip to the very beginning of the loop infinitely
+                    if current_time > end_time:
+                        break
+                    continue
+                self._cached_file = csv_filename
+                
+            data = self._cached_data
+            
+            # 3. Scan through the data 
+            for t_data_time, t_current_rate in data:
+                data_time = t_data_time
+                current_rate = t_current_rate
+                
+                # Skip points that we've completely passed (optimization)
+                if data_time < current_time and not (index == 0 and 'prev_data_time' not in locals()):
+                    # Before we start yielding, we need to guarantee prev_data variables exist for interpolation
+                    if index == 0:
+                        prev_data_time = data_time
+                        prev_data_rate = current_rate
+                    continue
+                    
                 while current_time <= data_time:
-                    # 4. For all values from that point on, calculate the heart rate by interpolation, using the sampling interval.
+                    # 4. For all values from that point on, calculate the heart rate by interpolation
                     if data_time == current_time:
                         self.data[index] = number_precision(current_rate, self.precision)
                     else:
-                        # interpolate between the two values
-                        data_time_diff = (data_time - prev_data_time).seconds
-                        sample_time_diff = current_time.timestamp() - prev_data_time.timestamp()
-
-                        heart_rate_diff = current_rate - prev_data_rate
-                        m = heart_rate_diff/data_time_diff
-
-                        value = prev_data_rate + m*sample_time_diff
-
-                        self.data[index] = number_precision(value, self.precision)
+                        # Safety check: if there's no previous data to interpolate from, just use current
+                        if 'prev_data_time' not in locals():
+                            self.data[index] = number_precision(current_rate, self.precision)
+                        else:
+                            # interpolate between the two values
+                            data_time_diff = (data_time - prev_data_time).seconds
+                            if data_time_diff == 0:
+                                self.data[index] = number_precision(current_rate, self.precision)
+                            else:
+                                sample_time_diff = current_time.timestamp() - prev_data_time.timestamp()
+                                heart_rate_diff = current_rate - prev_data_rate
+                                m = heart_rate_diff / data_time_diff
+                                value = prev_data_rate + m * sample_time_diff
+                                self.data[index] = number_precision(value, self.precision)
 
                     self.dates[index] = current_time
                     index += 1
                     current_time += timedelta(seconds=self.interval_s)
+                    
+                    if index == num_samples or current_time > end_time:
+                        break
+                        
                 prev_data_time = data_time
                 prev_data_rate = current_rate
-                if index == num_samples:
+                
+                if index == num_samples or current_time > end_time:
                     break
+                    
+            # Check edge case: If we read a whole file but `current_time` is still somehow stuck on that
+            # same date (e.g. file ended early at 8pm), bump current_time to the next day so we don't infinite loop.
+            if current_time.date().strftime('%Y-%m-%d') == start_date:
+                current_time = datetime.combine(current_time.date() + timedelta(days=1), datetime.min.time())
+
             # 5. If the end time is reached before the required number of samples are found, return the data found so far
             if current_time > end_time:
                 break
