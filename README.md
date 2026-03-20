@@ -25,9 +25,7 @@ How to use FitOut:
 ### Export
 Export your [FitBit data](https://www.fitbit.com/settings/data/export), using [Google Takeout](https://takeout.google.com/settings/takeout/custom/fitbit?pli=1).
 
-**Note:** Currently only export to zip is supported, and the zip files must be extracted to your local drive.
-
-Once the export is complete, download the zip file and extract it. I use `C:/Dev/Fitbit/Google/`. 
+Once the export is complete, download the zip file. I use `C:/Dev/Fitbit/Google/`. 
 This directory is the `takeout_dir`.
 
 ### Trivial Example
@@ -39,7 +37,9 @@ def main():
     # Specify the location where the Takeout zip files was extracted
     takeout_dir = 'C:/Dev/Fitbit/Google/'
     # Use the NativeFileLoader to load the data from the extracted files
-    data_source = fo.NativeFileLoader(takeout_dir)
+    # data_source = fo.NativeFileLoader(takeout_dir)
+    # Use the ZipFileLoader to load data from the ZIP file directly.
+    data_source = fo.ZipFileLoader(takeout_dir+"takeout-20260320T162823Z-3-001.zip")
     
     # Specify the desired date range.
     start_date = date(2024, 10, 1)
@@ -85,7 +85,9 @@ def main():
     # Specify the location where the Takeout zip files was extracted
     takeout_dir = 'C:/Dev/Fitbit/Google/'
     # Use the NativeFileLoader to load the data from the extracted files
-    data_source = fo.NativeFileLoader(takeout_dir)
+    # data_source = fo.NativeFileLoader(takeout_dir)
+    # Use the ZipFileLoader to load data from the ZIP file directly.
+    data_source = fo.ZipFileLoader(takeout_dir+"takeout-20260320T162823Z-3-001.zip")
 
     # Specify the desired date range.
     start_date = date(2024, 10, 1)
