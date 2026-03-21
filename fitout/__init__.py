@@ -8,3 +8,4 @@ from .datasources import *
 from .importers.breathing_rate import *
 from .importers.heart_rate import *
 from .importers.sleep import *
+from .importers.exercise import *
