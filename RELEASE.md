@@ -33,16 +33,30 @@ Create a tag with the current version, e.g. `v0.0.9`.
 git tag v0.0.9
 ```
 
+*(Tip: In PowerShell, you can automatically extract and tag using the version in `__init__.py`:)*
+```powershell
+$version = python -c "import re; match=re.search(r'__version__\s*=\s*[\'\""]v?([^\'\""]+)[\'\""]', open('fitout/__init__.py').read()); print('v' + match.group(1)) if match else exit(1)"
+if ($LASTEXITCODE -eq 0) { git tag $version; Write-Host "Created tag: $version" } else { Write-Host "Failed to find version" }
+```
+
 ## Update the ChangeLog
 
 **FitOut** uses `auto-changelog` to parse git commit messages and generate the `CHANGELOG.md`.
 
 ```bash
+# 1. Generate the changelog (it will detect the tag you just made)
 auto-changelog --tag-prefix v
+
+# 2. Add and commit the changelog
 git add CHANGELOG.md
-git commit -m "Updating CHANGELOG"
+git commit -m "Updating CHANGELOG for release"
+
+# 3. Move the tag forward to include the changelog commit!
+git tag -f $version
+
+# 4. Push the branch and the new tag
 git push
-git push --tags
+git push -f --tags
 ```
 
 ## Make a GitHub Release
