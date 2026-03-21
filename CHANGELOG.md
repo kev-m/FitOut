@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.3.0 (2026-03-21)
+
+#### New Features
+
+* (importers): add weight info importer and tests
+* (importers): add exercise info importer and tests
+#### Fixes
+
+* (doc): Adding requirements files, to help developers.
+
+Full set of changes: [`v0.2.0...v0.3.0`](https://github.com/kev-m/FitOut/compare/v0.2.0...v0.3.0)
+
 ## v0.2.0 (2026-03-20)
 
 #### New Features
