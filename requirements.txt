@@ -1,0 +1,7 @@
+# Minimum requirements for FitOut
+# (FitOut primarily uses the Python standard library)
+
+# Optional dependencies (for examples and plotting)
+# numpy
+# PyQt6
+# matplotlib

@@ -1,0 +1,13 @@
+-r requirements.txt
+
+# Development and Testing
+pytest>=7.0
+
+# Build and Formatting
+flit>=3.10.1
+autopep8
+
+# Optional dependencies for running examples
+numpy
+PyQt6
+matplotlib
