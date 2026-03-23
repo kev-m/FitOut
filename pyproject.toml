@@ -8,12 +8,11 @@ authors = [
         {name = "Kevin Meyer", email = "kevin@kmz.co.za"}
 ]
 readme = "README.md"
-license = {file = "LICENSE.txt"}
+license = {text = "Apache-2.0"}
 requires-python = ">=3.7"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.7",
