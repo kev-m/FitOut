@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.3.1 (2026-03-25)
+
+#### Fixes
+
+* (heartrate): Re-applying caching files to speed up reading of heart-rate data.
+* (config): Fixing license in project configuration.
+* (doc): Fixing release instructions.
+
+Full set of changes: [`v0.3.0...v0.3.1`](https://github.com/kev-m/FitOut/compare/v0.3.0...v0.3.1)
+
 ## v0.3.0 (2026-03-21)
 
 #### New Features
