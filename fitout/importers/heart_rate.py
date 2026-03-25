@@ -103,8 +103,25 @@ class RestingHeartRate(BaseImporter):
         while index < num_days:
             json_filename = self.data_source._get_json_filename(
                 self.data_path + self.data_file, current_date)
-            with self.data_source.open(json_filename) as f:
-                json_data = json.load(f)
+                
+            # Use cached file data to avoid opening and parsing the same JSON file if it spans multiple days
+            if not hasattr(self, '_cached_file') or self._cached_file != json_filename:
+                try:
+                    with self.data_source.open(json_filename) as f:
+                        self._cached_data = json.load(f)
+                except FileNotFoundError:
+                    self._cached_data = [] # empty list for missing file
+
+                self._cached_file = json_filename
+
+            json_data = self._cached_data
+
+            if not json_data:
+                # If there's no json_data we just skip to the next day
+                index += 1
+                current_date += timedelta(days=1)
+                continue
+
             for json_entry in json_data:
                 json_date = json_entry['value']['date']
                 if index > 0 and json_date is None:
@@ -122,6 +139,12 @@ class RestingHeartRate(BaseImporter):
                         current_date += timedelta(days=1)
                 if index == num_days:
                     break
+            
+            # If the current file doesn't have data for this date, force increment so it doesn't get stuck in an infinite loop
+            if index < num_days and current_date == start_date + timedelta(days=index):
+                index += 1
+                current_date += timedelta(days=1)
+
             # TODO: Handle missing data and errors
 
         return self.data
