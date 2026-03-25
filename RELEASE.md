@@ -49,7 +49,7 @@ auto-changelog --tag-prefix v
 
 # 2. Add and commit the changelog
 git add CHANGELOG.md
-git commit -m "Updating CHANGELOG for release"
+git commit -m "Updating CHANGELOG for $version"
 
 # 3. Move the tag forward to include the changelog commit!
 git tag -f $version
